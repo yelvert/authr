@@ -9,6 +9,15 @@ class User < ApplicationRecord
   validates_presence_of :old_password, if: :persisted?
   validate { errors.add :old_password, "incorrect" if persisted? && !authenticate(old_password) }
 
+  class << self
+    def authenticate(username, password)
+      user = User.where(username: username).first
+      return unless user
+      return unless user.authenticate(password)
+      user
+    end
+  end
+
   def password=(unencrypted_password)
     if unencrypted_password.nil?
       @password = nil
