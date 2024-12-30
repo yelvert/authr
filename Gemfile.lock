@@ -72,6 +72,13 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    argon2id (0.8.0-aarch64-linux-gnu)
+    argon2id (0.8.0-aarch64-linux-musl)
+    argon2id (0.8.0-arm-linux-gnu)
+    argon2id (0.8.0-arm-linux-musl)
+    argon2id (0.8.0-x86_64-darwin)
+    argon2id (0.8.0-x86_64-linux-gnu)
+    argon2id (0.8.0-x86_64-linux-musl)
     ast (2.4.2)
     base64 (0.2.0)
     bcrypt_pbkdf (1.1.1)
@@ -325,6 +332,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  argon2id (~> 0.8.0)
   bootsnap
   brakeman
   docker-api (~> 2.4)

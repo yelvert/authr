@@ -65,3 +65,5 @@ end
 
 
 gem "docker-api", "~> 2.4"
+
+gem "argon2id", "~> 0.8.0"
