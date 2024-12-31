@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
+  match "/forward_auth_login", to: "forward_auth#login", via: [ :get, :post ]
+  get :forward_auth, to: "forward_auth#check"
+
   resource :session, only: %i[ new create destroy ] do
-    get :login, action: :new, as: :login
-    get :logout, action: :destroy, as: :logout
+    get :login, action: :new
+    get :logout, action: :destroy
   end
   resources :users
-  get "home", to: "home#index", as: :home
+  get :home, to: "home#index"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

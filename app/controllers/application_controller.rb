@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.where(id: session[:user_id]).first
   end
 
+  def set_current_user(user)
+    @current_user = user
+  end
+
   def logged_in? = current_user.present?
 
   def login_required!
