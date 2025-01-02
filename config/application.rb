@@ -39,8 +39,9 @@ module Authr
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    config.action_controller.default_url_options = { protocol: "http", host: "10.50.0.91", port: 3000 }
-    config.action_controller.asset_host = "10.50.0.91:3000"
+    config.action_controller.default_url_options = { protocol: "https", host: "authr-dev.new.home.yelvert.io" }
+    # config.action_controller.asset_host = "localhost:3036"
+    config.hosts << "authr-dev.new.home.yelvert.io"
     config.hosts << "whoami.new.home.yelvert.io"
   end
 end

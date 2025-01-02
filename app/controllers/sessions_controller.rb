@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   skip_before_action :login_required!
+  layout false
 
   def new
   end
@@ -7,14 +8,15 @@ class SessionsController < ApplicationController
   def create
     if user = User.authenticate(params[:username], params[:password])
       session[:user_id] = user.id
-      redirect_to home_url
+      binding.pry
+      head(:ok)
     else
-      redirect_to new_session_url, alert: "Invalid username or password"
+      head(:unauthorized)
     end
   end
 
   def destroy
     reset_session
-    redirect_to home_url
+    head(:ok)
   end
 end

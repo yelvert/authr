@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
-  match "/forward_auth_login", to: "forward_auth#login", via: [ :get, :post ]
-  get :forward_auth, to: "forward_auth#check"
+  defaults export: true do
+    get :forward_auth, to: "forward_auth#index", as: :forward_auth
+    get :forward_auth_login, to: "forward_auth#login", as: :forward_auth_login
 
-  resource :session, only: %i[ new create destroy ] do
-    get :login, action: :new
-    get :logout, action: :destroy
+    resource :session, only: %i[ new create destroy ] do
+      get :logout, action: :destroy
+    end
   end
+
   resources :users
   get :home, to: "home#index"
 

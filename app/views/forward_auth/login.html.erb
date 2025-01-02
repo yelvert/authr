@@ -18,27 +18,12 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag :app %>
+    <%= vite_client_tag %>
+    <%= vite_react_refresh_tag %>
+    <%= vite_javascript_tag 'forward_auth.tsx' %>
   </head>
 
   <body>
-    <%= form_with url: forward_auth_login_url do |form| %>
-      <% if alert = flash[:alert] %>
-        <div style="color:red"><%= alert %></div>
-      <% end %>
-      <%= form.hidden_field :rd, value: params[:rd] %>
-
-      <div>
-        <%= form.text_field :username, required: true, autofocus: true, autocomplete: "username", placeholder: "Username", value: params[:username] %>
-      </div>
-
-      <div>
-        <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Password", maxlength: 72 %>
-      </div>
-
-      <%= form.submit "Sign in" %>
-    <% end %>
-
   </body>
 </html>
