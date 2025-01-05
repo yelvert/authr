@@ -19,6 +19,16 @@ require "action_view/railtie"
 Bundler.require(*Rails.groups)
 
 module Authr
+  CONFIG_PATH = ENV.fetch("AUTHR_CONFIG_PATH") { File.join(__dir__, "authr.yml") }
+  CONFIG = ActiveSupport::OrderedOptions.new.update(
+    ActiveSupport::ConfigurationFile.parse(CONFIG_PATH).deep_symbolize_keys.reverse_merge({
+      ssl: false,
+      cookie_name: "_authr_session",
+      cookie_same_site: "Lax",
+      session_expiration: 1.hour
+    })
+  )
+
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
@@ -39,9 +49,14 @@ module Authr
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    config.action_controller.default_url_options = { protocol: "https", host: "authr-dev.new.home.yelvert.io" }
+    config.action_controller.default_url_options = {
+      protocol: "http#{Authr::CONFIG[:ssl] && "s"}",
+      host: Authr::CONFIG[:domain],
+      port: Authr::CONFIG[:port]
+    }
+
     # config.action_controller.asset_host = "localhost:3036"
-    config.hosts << "authr-dev.new.home.yelvert.io"
-    config.hosts << "whoami.new.home.yelvert.io"
+    config.hosts << Authr::CONFIG[:domain]
+    config.hosts << (/\A#{ActionDispatch::HostAuthorization::SUBDOMAIN_REGEX}+#{Regexp.escape(Authr::CONFIG[:cookie_domain])}#{ActionDispatch::HostAuthorization::PORT_REGEX}?\z/i)
   end
 end
