@@ -1,13 +1,12 @@
 class User < ApplicationRecord
+  has_many :user_groups, autosave: true
+  has_many :groups, through: :user_groups, dependent: :destroy
+
   validates :username, presence: true, uniqueness: true
 
   attr_accessor :password
-  validates_presence_of :password, if: :new_record?
+  validates_presence_of :password, if: -> { new_record? && password_digest.blank? }
   validates :password, confirmation: true, allow_blank: true
-
-  attr_accessor :old_password
-  validates_presence_of :old_password, if: :persisted?
-  validate { errors.add :old_password, "incorrect" if persisted? && !authenticate(old_password) }
 
   class << self
     def authenticate(username, password)

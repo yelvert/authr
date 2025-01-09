@@ -1,26 +1,34 @@
 Rails.application.routes.draw do
-  defaults export: true do
-    get :forward_auth, to: "forward_auth#index", as: :forward_auth
-    get :forward_auth_login, to: "forward_auth#login", as: :forward_auth_login
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
 
-    resource :session, only: %i[ new create destroy ] do
-      get :logout, action: :destroy
+  scope controller: :current_user, path: "/current_user", as: :current_user do
+    get :whoami
+  end
+
+  scope controller: :forward_auth, path: "/forward_auth", as: :forward_auth do
+    get "/", action: :index
+    get :login
+  end
+
+  resource :session, only: %i[ new create ] do
+    get :logout, action: :destroy
+  end
+  get :admin, to: "admin#index"
+
+  resources :users do
+    member do
+      put "/groups/:group_id", action: :add_group, as: :add_group
+      delete "/groups/:group_id", action: :remove_group, as: :remove_group
+    end
+  end
+  resources :groups do
+    member do
+      put "/users/:user_id", action: :add_user, as: :add_user
+      delete "/users/:user_id", action: :remove_user, as: :remove_user
     end
   end
 
-  resources :users
-  get :home, to: "home#index"
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  root to: redirect("/home", status: 302)
+  root to: redirect("/admin", status: 302)
 end

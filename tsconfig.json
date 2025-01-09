@@ -14,9 +14,10 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "paths": {
-      "@api/*": ["./app/javascript/api/*"],
+      "@api/*": ["./app/frontend/api/*"],
       "@api": ["@api/index"],
-      "@app/*": ["./app/javascript/*"]
+      "@app/*": ["./app/frontend/*"],
+      "@admin/*": ["./app/frontend/admin/*"]
     }
   },
   "exclude": [

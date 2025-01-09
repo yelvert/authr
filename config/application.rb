@@ -25,7 +25,8 @@ module Authr
       ssl: false,
       cookie_name: "_authr_session",
       cookie_same_site: "Lax",
-      session_expiration: 1.hour
+      session_expiration: 1.hour,
+      admin_username: "admin"
     })
   )
 

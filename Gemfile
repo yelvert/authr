@@ -52,7 +52,7 @@ group :development, :test do
   gem "js_from_routes"
 end
 
-group :development do
+group :development, :test do
   gem "pry"
   gem "pry-doc"
   gem "pry-nav"
@@ -71,3 +71,16 @@ gem "docker-api", "~> 2.4"
 gem "argon2id", "~> 0.8.0"
 
 gem "vite_rails", "~> 3.0"
+
+gem "rswag", "~> 2.16"
+
+gem "rswag-api"
+gem "rswag-ui"
+
+group :development, :test do
+  gem "rspec-rails"
+  gem "rswag-specs"
+  gem "factory_bot"
+  gem "factory_bot_rails"
+  gem "faker"
+end

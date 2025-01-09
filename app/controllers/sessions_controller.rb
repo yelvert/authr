@@ -6,6 +6,7 @@ class SessionsController < ApplicationController
   end
 
   def create
+    binding.pry
     if user = User.authenticate(params[:username], params[:password])
       session[:user_id] = user.id
       head(:ok)

@@ -1,8 +1,6 @@
 class ForwardAuthController < ApplicationController
   skip_before_action :login_required!
 
-  layout false
-
   def index
     proto = request.headers["HTTP_X_FORWARDED_PROTO"]
     host = request.headers["HTTP_X_FORWARDED_HOST"]
