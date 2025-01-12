@@ -14,7 +14,7 @@ class Admin::GroupsController < Admin::ApplicationController
     @group = Group.new(group_params)
 
     if @group.save
-      render :show, status: :created, location: @group
+      render :show, status: :created, location: [ :admin, @group ]
     else
       render json: @group.errors, status: :unprocessable_entity
     end
@@ -22,7 +22,7 @@ class Admin::GroupsController < Admin::ApplicationController
 
   def update
       if @group.update(group_params)
-        render :show, status: :ok, location: @group
+        render :show, status: :ok, location: [ :admin, @group ]
       else
         render json: @group.errors, status: :unprocessable_entity
       end

@@ -1,6 +1,6 @@
-import react, { FunctionComponent, useCallback, useState } from 'react'
+import { FunctionComponent, useCallback, useState } from 'react'
 
-import SessionApi from '@api/SessionsApi'
+import AuthrApiClient from '@sdk'
 
 export interface ILoginFormProps {
   onSuccess : () => void
@@ -11,9 +11,9 @@ export const LoginForm : FunctionComponent<ILoginFormProps> = ({onSuccess}) => {
   const [submitting, setSubmitting] = useState(false)
   const login = useCallback(async (formData : FormData) => {
     setSubmitting(true)
-    const username = formData.get("username")
-    const password = formData.get("password")
-    SessionApi.create({data: {username, password}, responseAs: 'response'}).then(response => {
+    const username = formData.get("username") as string
+    const password = formData.get("password") as string
+    AuthrApiClient.session.login({username, password}).then(() => {
       setError(false)
       setSubmitting(false)
       onSuccess()

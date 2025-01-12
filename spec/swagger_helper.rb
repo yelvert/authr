@@ -33,17 +33,17 @@ RSpec.configure do |config|
             items: { type: 'string' }
           }
         }
-      },
-      servers: [
-        {
-          url: 'https://{defaultHost}',
-          variables: {
-            defaultHost: {
-              default: 'www.example.com'
-            }
-          }
-        }
-      ]
+      }
+      # servers: [
+      #   {
+      #     url: 'https://{defaultHost}',
+      #     variables: {
+      #       defaultHost: {
+      #         default: 'www.example.com'
+      #       }
+      #     }
+      #   }
+      # ]
     }
   }
 

@@ -1,10 +1,9 @@
 class Admin::UsersController < Admin::ApplicationController
-  before_action :set_user, only: %i[ show edit update destroy add_group remove_group ]
+  before_action :set_user, only: %i[ show update destroy add_group remove_group ]
   before_action :set_group, only: %i[ add_group remove_group ]
 
   def index
     @users = User.all
-    render json:
   end
 
   def show
@@ -14,7 +13,7 @@ class Admin::UsersController < Admin::ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render :show, status: :created, location: @user
+      render :show, status: :created, location: [ :admin, @user ]
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -22,7 +21,7 @@ class Admin::UsersController < Admin::ApplicationController
 
   def update
     if @user.update(user_params)
-      render :show, status: :ok, location: @user
+      render :show, status: :ok, location: [ :admin, @user ]
     else
       render json: @user.errors, status: :unprocessable_entity
     end

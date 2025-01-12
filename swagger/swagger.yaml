@@ -8,6 +8,31 @@ consumes:
 produces:
 - application/json
 paths:
+  "/current_user":
+    get:
+      summary: whoami
+      operationId: Whoami
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                name: CurrentUserWhoamiResponse
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  username:
+                    type: string
+                required:
+                - id
+                - name
+                - username
+        '401':
+          description: unauthorized
   "/admin/groups":
     get:
       summary: list
@@ -346,8 +371,3 @@ components:
           "$ref": "#/components/schemas/attribute_error"
         password_confirmation:
           "$ref": "#/components/schemas/attribute_error"
-servers:
-- url: https://{defaultHost}
-  variables:
-    defaultHost:
-      default: www.example.com

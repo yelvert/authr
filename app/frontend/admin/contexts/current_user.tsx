@@ -1,6 +1,6 @@
 import { createContext, useContext, ComponentType, FunctionComponent, PropsWithChildren } from 'react'
 import useAsync from '@app/shared/utils/useAsync'
-import CurrentUserApi from '@api/CurrentUserApi'
+import AuthrApiClient from '@sdk'
 
 export interface ICurrentUserInfo {
   id : number
@@ -23,17 +23,17 @@ export interface ICurrentUserProps {
 }
 
 export const CurrentUser : FunctionComponent<PropsWithChildren<ICurrentUserProps>> = ({ children, loadingRender, errorRender }) => {
-  const userReq = useAsync(() => CurrentUserApi.whoami())
+  const userReq = useAsync(() => AuthrApiClient.currentUser.whoami())
   
-  const ctx : ICurrentUserContext = {
-    info: userReq.value
-  }
-
   const Loading = loadingRender || (() => "Loading")
   if (userReq.loading) return <Loading />
 
   const Error = errorRender || (() => "Failed to load current user")
   if (userReq.error) return <Error />
+  
+  const ctx : ICurrentUserContext = {
+    info: userReq.value!.data
+  }
   
   return <CurrentUserProvider value={ctx}>
     { children }

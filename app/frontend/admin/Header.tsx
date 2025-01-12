@@ -2,6 +2,8 @@ import { FunctionComponent } from 'react'
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap'
 import useCurrentUser from './contexts/current_user'
 import { LightDarkModeSwitch } from '@app/shared/LightDarkModeSwitch'
+import { NavLink } from 'react-router'
+import routes from './routes'
 
 export const Header : FunctionComponent = () => {
   const currentUser = useCurrentUser()
@@ -15,8 +17,8 @@ export const Header : FunctionComponent = () => {
           style={{ maxHeight: '100px' }}
           navbarScroll
         >
-          <Nav.Link>Home</Nav.Link>
-          <Nav.Link>Users</Nav.Link>
+          <NavLink to={`/`} className="nav-link">Home</NavLink>
+          <NavLink to={`/${routes.users}`} className="nav-link">Users</NavLink>
           <Nav.Link>Groups</Nav.Link>
         </Nav>
         <Nav className="flex-row flex-wrap ms-md-auto">

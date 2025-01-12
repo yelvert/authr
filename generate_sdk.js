@@ -5,11 +5,10 @@ import fs from "fs"
 const outPath = path.join(process.cwd(), 'app', 'frontend', 'sdk')
 
 generateApi({
-  name: "index.ts",
+  name: "client.ts",
   apiClassName: "AuthrApi",
   input: path.join(process.cwd(), 'swagger', 'swagger.yaml'),
   output: outPath,
-  templates: path.join(process.cwd(), 'templates'),
   httpClientType: 'fetch',
   generateResponses: true,
   generateRouteTypes: true,
