@@ -3,11 +3,10 @@ import { withCurrentUser } from '@admin/contexts/current_user'
 import { withLightDarkMode } from '@app/shared/LightDarkModeSwitch'
 import Header from '@admin/Header'
 import Content from '@admin/Content'
-import { BrowserRouter, createBrowserRouter, RouterProvider, useParams } from 'react-router'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 import { withGrowl } from '@app/shared/Growl'
-import UsersIndex from './pages/users/list'
-import UserNew from './pages/users/new'
-import UserDetails from './pages/users/details'
+import usersRoutes from './pages/users/routes'
+import groupsRoutes from './pages/groups/routes'
 
 const routes = createBrowserRouter([
   {
@@ -21,26 +20,8 @@ const routes = createBrowserRouter([
         index: true,
         element: <div>HOME</div>,
       },
-      {
-        path: "/users",
-        handle: { breadcrumb: 'Users' },
-        children: [
-          {
-            index: true,
-            Component: UsersIndex,
-          },
-          {
-            path: "new",
-            Component: UserNew,
-            handle: { breadcrumb: 'New' },
-          },
-          {
-            path: ":userId",
-            Component: () => <UserDetails userId={Number(useParams().userId!)} />,
-            handle: { breadcrumb: 'Edit' },
-          },
-        ],
-      },
+      usersRoutes,
+      groupsRoutes,
     ],
   },
 ], {

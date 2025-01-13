@@ -1,15 +1,31 @@
-import { FunctionComponent } from "react";
-import { Route } from "react-router";
+import { RouteObject, useLoaderData, useParams } from "react-router";
 import { UsersIndex } from "./list";
+import UserNew from "./new";
+import UserDetails from "./details";
+import AuthrApiClient from "@app/sdk";
 
-export const userRoutes = {
-  index: "/"
+export const usersRoutes : RouteObject = {
+  path: "/users",
+  handle: { breadcrumb: 'Users' },
+  children: [
+    {
+      index: true,
+      Component: UsersIndex,
+    },
+    {
+      path: "new",
+      Component: UserNew,
+      handle: { breadcrumb: 'New' },
+    },
+    {
+      path: ":userId",
+      loader: ({ params }) => {
+        return AuthrApiClient.admin.usersDetail(Number(params.userId))
+      },
+      Component: () => <UserDetails user={useLoaderData()} />,
+      handle: { breadcrumb: 'Edit' },
+    },
+  ],
 }
 
-export const UsersRoute : FunctionComponent = () => {
-  return <>
-    <Route index element={<UsersIndex />} />
-  </>
-}
-
-export default UsersRoute
+export default usersRoutes

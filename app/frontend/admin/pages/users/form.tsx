@@ -1,5 +1,5 @@
 import { UserErrors, UserResponse, UsersCreatePayload, UsersUpdatePayload } from "@app/sdk/client";
-import { FunctionComponent, useCallback, useState } from "react";
+import { FunctionComponent, useCallback } from "react";
 import { Button, Form } from "react-bootstrap";
 
 export interface IUserFormProps {
@@ -9,21 +9,12 @@ export interface IUserFormProps {
 }
 
 export const UserForm : FunctionComponent<IUserFormProps> = ({ user, errors, onSubmit }) => {
-  const [error, setError] = useState(false)
   const handleSubmit = useCallback(async (formData : FormData) => {
     const name = formData.get("name") as string
     const username = formData.get("username") as string
     const password = formData.get("password") as string
     const password_confirmation = formData.get("password_confirmation") as string
     onSubmit({ name, username, password, password_confirmation })
-    // AuthrApiClient.session.login({username, password}).then(() => {
-    //   setError(false)
-    //   setSubmitting(false)
-    //   onSuccess()
-    // }).catch(err => {
-    //   setError(true)
-    //   setSubmitting(false)
-    // })
   }, [onSubmit])
 
   const renderPassword = user.id

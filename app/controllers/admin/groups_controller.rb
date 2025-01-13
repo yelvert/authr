@@ -1,10 +1,9 @@
 class Admin::GroupsController < Admin::ApplicationController
-  before_action :set_group, only: %i[ show edit update destroy add_user remove_user ]
+  before_action :set_group, only: %i[ show update destroy add_user remove_user ]
   before_action :set_user, only: %i[ add_user remove_user ]
 
   def index
     @groups = Group.all
-    render json:
   end
 
   def show

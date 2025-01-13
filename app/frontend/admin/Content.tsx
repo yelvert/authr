@@ -1,6 +1,6 @@
 import { FunctionComponent, useContext, useMemo } from "react"
-import { Breadcrumb, Container } from "react-bootstrap"
-import { Outlet, UIMatch, useMatches, NavLink } from "react-router"
+import { Breadcrumb, Container, Spinner } from "react-bootstrap"
+import { Outlet, UIMatch, useMatches, NavLink, useNavigation } from "react-router"
 import { GrowlOutlet } from "@app/shared/Growl"
 import { isFunction } from "lodash"
 
@@ -15,7 +15,8 @@ type IMatch = UIMatch<IRoute["Data"], IRoute["Handle"]>
 
 export const Content : FunctionComponent = () => {
   const matches = useMatches() as IMatch[]
-  const breadcrumbs = useMemo(() => matches.filter(x => x.handle?.breadcrumb), [...matches])
+  const breadcrumbs = useMemo(() => matches.filter(x => x.handle?.breadcrumb), [matches])
+  const navigation = useNavigation()
   return <Container className="my-3 position-relative">
     <div className="position-absolute top-0 w-25" style={{ right: '1rem' }}>
       <GrowlOutlet />
@@ -27,7 +28,13 @@ export const Content : FunctionComponent = () => {
         </Breadcrumb.Item>
       )}
     </Breadcrumb>
-    <Outlet />
+    {
+      navigation.state == 'loading'
+      ? <div className="d-flex justify-content-center">
+          <Spinner animation="grow" variant="light" style={{width: '10rem', height: '10rem'}} />
+        </div>
+      : <Outlet />
+    }
   </Container>
 }
 
