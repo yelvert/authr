@@ -4,6 +4,7 @@ import AuthrApiClient, { UserResponse, UsersUpdatePayload } from "@sdk"
 import useRepeatableAsync from "@app/shared/utils/useRepeatableAsync"
 import useGrowl from "@app/shared/Growl"
 import UserForm from "./form"
+import { useNavigate } from "react-router"
 
 export interface IUserDetailProps {
   user : UserResponse
@@ -11,10 +12,12 @@ export interface IUserDetailProps {
 
 export const UserDetails : FunctionComponent<IUserDetailProps> = ({ user }) => {
   const growl = useGrowl()
+  const navigate = useNavigate()
   const update = useRepeatableAsync((userData : UsersUpdatePayload['user']) => {
     if (update.loading) return Promise.reject()
     return AuthrApiClient.admin.usersUpdate(user.id, {user: userData}).then(res => {
       growl.add({ type: 'success', content: 'User updated successfully' })
+      navigate('/users')
       return res
     }).catch(res => {
       if (res.status && res.error) growl.add({ type: 'danger', content: 'Update update failed' })

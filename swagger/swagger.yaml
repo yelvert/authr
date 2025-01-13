@@ -237,6 +237,10 @@ paths:
                       type: string
                     password_confirmation:
                       type: string
+                    group_ids:
+                      type: array
+                      items:
+                        type: integer
                   required:
                   - name
                   - username
@@ -298,6 +302,10 @@ paths:
                       type: string
                     password_confirmation:
                       type: string
+                    group_ids:
+                      type: array
+                      items:
+                        type: integer
               required:
               - user
   "/admin/users/{id}/groups/{group_id}":
@@ -356,10 +364,15 @@ components:
           type: string
         username:
           type: string
+        group_ids:
+          type: array
+          items:
+            type: integer
       required:
       - id
       - name
       - username
+      - group_ids
     user_errors:
       type: object
       properties:
@@ -370,4 +383,6 @@ components:
         password:
           "$ref": "#/components/schemas/attribute_error"
         password_confirmation:
+          "$ref": "#/components/schemas/attribute_error"
+        group_ids:
           "$ref": "#/components/schemas/attribute_error"

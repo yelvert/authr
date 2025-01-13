@@ -8,9 +8,10 @@ RSpec.describe 'admin', type: :request do
       properties: {
         id: { type: :integer },
         name: { type: :string },
-        username: { type: :string }
+        username: { type: :string },
+        group_ids: { type: :array, items: { type: :integer } }
       },
-      required: %i[ id name username ]
+      required: %i[ id name username group_ids ]
     }
 
     create_update_schema = {
@@ -19,11 +20,12 @@ RSpec.describe 'admin', type: :request do
         name: { type: :string },
         username: { type: :string },
         password: { type: :string },
-        password_confirmation: { type: :string }
+        password_confirmation: { type: :string },
+        group_ids: { type: :array, items: { type: :integer } }
       }
     }
 
-    error_schema :user_errors, %i[ name username password password_confirmation ]
+    error_schema :user_errors, %i[ name username password password_confirmation group_ids ]
 
     path '/admin/users' do
       get('list') do

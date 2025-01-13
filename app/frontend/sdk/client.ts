@@ -13,6 +13,7 @@ export interface UserResponse {
   id: number
   name: string
   username: string
+  group_ids: number[]
 }
 
 export interface UserErrors {
@@ -20,6 +21,7 @@ export interface UserErrors {
   username?: AttributeError
   password?: AttributeError
   password_confirmation?: AttributeError
+  group_ids?: AttributeError
 }
 
 export interface CurrentUserWhoamiResponse {
@@ -73,6 +75,7 @@ export interface UsersCreatePayload {
     username: string
     password: string
     password_confirmation: string
+    group_ids?: number[]
   }
 }
 
@@ -88,6 +91,7 @@ export interface UsersUpdatePayload {
     username?: string
     password?: string
     password_confirmation?: string
+    group_ids?: number[]
   }
 }
 

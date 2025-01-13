@@ -4,18 +4,16 @@ import AuthrApiClient, { GroupsCreatePayload } from "@sdk"
 import useRepeatableAsync from "@app/shared/utils/useRepeatableAsync"
 import useGrowl from "@app/shared/Growl"
 import GroupForm from "./form"
-import { useLocation, useMatch } from "react-router"
+import { useNavigate } from "react-router"
 
 export const GroupNew : FunctionComponent = () => {
-  const location = useLocation()
-  console.log('location', location)
-  const match = useMatch(location.pathname)
-  console.log('match', match)
   const growl = useGrowl()
+  const navigate = useNavigate()
   const create = useRepeatableAsync((groupData : GroupsCreatePayload['group']) => {
     if (create.loading) return Promise.reject()
     return AuthrApiClient.admin.groupsCreate({group: groupData}).then(res => {
       growl.add({ type: 'success', content: 'Group updated successfully' })
+      navigate('/groups')
       return res
     }).catch(res => {
       if (res.status && res.error) {

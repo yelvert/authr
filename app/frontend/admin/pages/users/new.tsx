@@ -4,18 +4,16 @@ import AuthrApiClient, { UsersCreatePayload } from "@sdk"
 import useRepeatableAsync from "@app/shared/utils/useRepeatableAsync"
 import useGrowl from "@app/shared/Growl"
 import UserForm from "./form"
-import { useLocation, useMatch } from "react-router"
+import { useLocation, useMatch, useNavigate } from "react-router"
 
 export const UserNew : FunctionComponent = () => {
-  const location = useLocation()
-  console.log('location', location)
-  const match = useMatch(location.pathname)
-  console.log('match', match)
   const growl = useGrowl()
+  const navigate = useNavigate()
   const create = useRepeatableAsync((userData : UsersCreatePayload['user']) => {
     if (create.loading) return Promise.reject()
     return AuthrApiClient.admin.usersCreate({user: userData}).then(res => {
       growl.add({ type: 'success', content: 'User updated successfully' })
+      navigate('/users')
       return res
     }).catch(res => {
       if (res.status && res.error) {

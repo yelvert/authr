@@ -1,6 +1,9 @@
-import { UserErrors, UserResponse, UsersCreatePayload, UsersUpdatePayload } from "@app/sdk/client";
-import { FunctionComponent, useCallback } from "react";
+import AuthrApiClient from "@app/sdk";
+import { GroupsListResponse, UserErrors, UserResponse, UsersCreatePayload, UsersUpdatePayload } from "@app/sdk/client";
+import useAsync from "@app/shared/utils/useAsync";
+import { FunctionComponent, useCallback, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import Select from 'react-select'
 
 export interface IUserFormProps {
   user : UserResponse
@@ -9,13 +12,18 @@ export interface IUserFormProps {
 }
 
 export const UserForm : FunctionComponent<IUserFormProps> = ({ user, errors, onSubmit }) => {
+  const groups = useAsync(() => AuthrApiClient.admin.groupsList());
+  
   const handleSubmit = useCallback(async (formData : FormData) => {
     const name = formData.get("name") as string
     const username = formData.get("username") as string
     const password = formData.get("password") as string
     const password_confirmation = formData.get("password_confirmation") as string
-    onSubmit({ name, username, password, password_confirmation })
+    const group_ids = (formData.get("group_ids") as string ?? "").split(',').map(Number)
+    onSubmit({ name, username, password, password_confirmation, group_ids })
   }, [onSubmit])
+
+  const [selectedGroupIds, setSelectedGroupIds] = useState(user.group_ids)
 
   const renderPassword = user.id
   ? <Button>Change Password</Button>
@@ -51,6 +59,26 @@ export const UserForm : FunctionComponent<IUserFormProps> = ({ user, errors, onS
       <Form.Control type="username" name="username" placeholder="Username" defaultValue={user.username} isInvalid={!!errors?.username} />
       <Form.Control.Feedback type="invalid">
         { errors?.username?.join(', ') }
+      </Form.Control.Feedback>
+    </Form.Group>
+
+    <Form.Group className="mb-3" controlId="username">
+      <Form.Label>Groups</Form.Label>
+      {groups.loading || <Select
+        options={groups.value?.data ?? []}
+        getOptionLabel={x => x.name}
+        getOptionValue={x => `${x.id}`}
+        value={(groups.value?.data ?? []).filter(x => selectedGroupIds.includes(x.id))}
+        isMulti
+        styles={{option: (baseStyles) => ({
+          ...baseStyles,
+          color: "var(--bs-dark)",
+        })}}
+        onChange={x => setSelectedGroupIds(x.map(o=>o.id))}
+      />}
+      <Form.Control type="hidden" name="group_ids" value={selectedGroupIds.join(',')} />
+      <Form.Control.Feedback type="invalid">
+        { errors?.group_ids?.join(', ') }
       </Form.Control.Feedback>
     </Form.Group>
 

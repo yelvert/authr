@@ -4,6 +4,7 @@ import AuthrApiClient, { GroupResponse, GroupsUpdatePayload } from "@sdk"
 import useRepeatableAsync from "@app/shared/utils/useRepeatableAsync"
 import useGrowl from "@app/shared/Growl"
 import GroupForm from "./form"
+import { useNavigate } from "react-router"
 
 export interface IGroupDetailProps {
   group : GroupResponse
@@ -11,10 +12,12 @@ export interface IGroupDetailProps {
 
 export const GroupDetails : FunctionComponent<IGroupDetailProps> = ({ group }) => {
   const growl = useGrowl()
+  const navigate = useNavigate()
   const update = useRepeatableAsync((groupData : GroupsUpdatePayload['group']) => {
     if (update.loading) return Promise.reject()
     return AuthrApiClient.admin.groupsUpdate(group.id, {group: groupData}).then(res => {
       growl.add({ type: 'success', content: 'Group updated successfully' })
+      navigate('/groups')
       return res
     }).catch(res => {
       if (res.status && res.error) growl.add({ type: 'danger', content: 'Update update failed' })

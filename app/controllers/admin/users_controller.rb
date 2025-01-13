@@ -54,6 +54,6 @@ class Admin::UsersController < Admin::ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.expect(user: %i[ name username password password_confirmation admin ])
+      params.expect(user: %i[ name username password password_confirmation admin ].concat([ group_ids: [] ]))
     end
 end
