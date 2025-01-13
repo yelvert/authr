@@ -56,6 +56,8 @@ module Authr
       port: Authr::CONFIG[:port]
     }
 
+    Docker.url = Authr::CONFIG[:docker_url]
+
     # config.action_controller.asset_host = "localhost:3036"
     config.hosts << Authr::CONFIG[:domain]
     config.hosts << (/\A#{ActionDispatch::HostAuthorization::SUBDOMAIN_REGEX}+#{Regexp.escape(Authr::CONFIG[:cookie_domain])}#{ActionDispatch::HostAuthorization::PORT_REGEX}?\z/i)
