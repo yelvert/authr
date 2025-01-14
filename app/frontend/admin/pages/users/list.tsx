@@ -1,18 +1,13 @@
 import { FunctionComponent } from "react"
-import { Spinner, Table } from "react-bootstrap"
+import { Table } from "react-bootstrap"
 import { NavLink } from "react-router"
-import AuthrApiClient from "@sdk"
-import useAsync from "@app/shared/utils/useAsync"
+import { UserResponse } from "@sdk"
 
-export const UsersIndex : FunctionComponent = () => {
-  const { loading, error, value} = useAsync(() => AuthrApiClient.admin.usersList())
-  if (loading) return <div className="d-flex justify-content-center">
-    <Spinner animation="grow" variant="light" style={{width: '10rem', height: '10rem'}} />
-  </div>
-  if (error) return <div className="d-flex justify-content-center">
-    Error loading Users, reload and try again.
-  </div>
-  const users = value!.data
+export interface IUsersListProps {
+  users : UserResponse[]
+}
+
+export const UsersList : FunctionComponent<IUsersListProps> = ({ users }) => {
   return <Table striped bordered hover>
     <thead>
       <tr>
@@ -35,4 +30,4 @@ export const UsersIndex : FunctionComponent = () => {
   </Table>
 }
 
-export default UsersIndex
+export default UsersList

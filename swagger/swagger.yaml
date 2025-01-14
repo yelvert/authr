@@ -8,6 +8,123 @@ consumes:
 produces:
 - application/json
 paths:
+  "/admin/applications":
+    get:
+      summary: list
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                name: ApplicationsListResponse
+                type: array
+                items:
+                  "$ref": "#/components/schemas/application_response"
+        '401':
+          description: unauthorized
+    post:
+      summary: create
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/application_response"
+        '422':
+          description: unprocessible entitiy
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/application_errors"
+                name: ApplicationCreateErrorResponse
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                application:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    hostnames:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - name
+                  - hostnames
+              required:
+              - application
+  "/admin/applications/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type:
+        - integer
+        - string
+    get:
+      summary: show
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/application_response"
+        '401':
+          description: unauthorized
+    put:
+      summary: update
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/application_response"
+        '422':
+          description: unprocessible entitiy
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/application_errors"
+                name: ApplicationCreateErrorResponse
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                application:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    hostnames:
+                      type: array
+                      items:
+                        type: string
+              required:
+              - application
+    delete:
+      summary: destroy
+      responses:
+        '204':
+          description: successful
+        '401':
+          description: unauthorized
   "/current_user":
     get:
       summary: whoami
@@ -132,6 +249,13 @@ paths:
                       type: string
               required:
               - group
+    delete:
+      summary: destroy
+      responses:
+        '204':
+          description: successful
+        '401':
+          description: unauthorized
   "/admin/groups/{id}/users/{user_id}":
     parameters:
     - name: id
@@ -308,6 +432,13 @@ paths:
                         type: integer
               required:
               - user
+    delete:
+      summary: destroy
+      responses:
+        '204':
+          description: successful
+        '401':
+          description: unauthorized
   "/admin/users/{id}/groups/{group_id}":
     parameters:
     - name: id
@@ -338,6 +469,34 @@ components:
       type: array
       items:
         type: string
+    application_response:
+      name: AppicationResponse
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        hostnames:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+      required:
+      - id
+      - name
+      - hostnames
+      - source
+    application_errors:
+      type: object
+      properties:
+        name:
+          "$ref": "#/components/schemas/attribute_error"
+        hostnames:
+          "$ref": "#/components/schemas/attribute_error"
+        source:
+          "$ref": "#/components/schemas/attribute_error"
     group_response:
       name: GroupResponse
       type: object

@@ -1,5 +1,5 @@
 import { RouteObject, useLoaderData, useParams } from "react-router";
-import { UsersIndex } from "./list";
+import { UsersList } from "./list";
 import UserNew from "./new";
 import UserDetails from "./details";
 import AuthrApiClient from "@app/sdk";
@@ -10,7 +10,8 @@ export const usersRoutes : RouteObject = {
   children: [
     {
       index: true,
-      Component: UsersIndex,
+      loader: () => AuthrApiClient.admin.usersList(),
+      Component: () => <UsersList users={useLoaderData()} />,
     },
     {
       path: "new",

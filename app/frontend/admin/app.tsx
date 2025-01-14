@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import { withGrowl } from '@app/shared/Growl'
 import usersRoutes from './pages/users/routes'
 import groupsRoutes from './pages/groups/routes'
+import applicationsRoutes from './pages/applications/routes'
 
 const routes = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const routes = createBrowserRouter([
       },
       usersRoutes,
       groupsRoutes,
+      applicationsRoutes,
     ],
   },
 ], {

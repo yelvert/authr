@@ -134,6 +134,25 @@ RSpec.describe 'admin', type: :request do
           run_test!
         end
       end
+
+      delete('destroy') do
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        response(204, 'successful') do
+          let(:group) { create(:group) }
+          let(:id) { group.id }
+          run_test!
+        end
+
+        response(401, 'unauthorized') do
+          run_test!
+        end
+      end
     end
 
     path '/admin/groups/{id}/users/{user_id}' do

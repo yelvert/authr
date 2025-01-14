@@ -1,5 +1,18 @@
 export type AttributeError = string[]
 
+export interface ApplicationResponse {
+  id: number
+  name: string
+  hostnames: string[]
+  source: string
+}
+
+export interface ApplicationErrors {
+  name?: AttributeError
+  hostnames?: AttributeError
+  source?: AttributeError
+}
+
 export interface GroupResponse {
   id: number
   name: string
@@ -23,6 +36,34 @@ export interface UserErrors {
   password_confirmation?: AttributeError
   group_ids?: AttributeError
 }
+
+export type ApplicationsListResponse = ApplicationResponse[]
+
+export interface ApplicationsCreatePayload {
+  application: {
+    name: string
+    hostnames: string[]
+  }
+}
+
+export type ApplicationsCreateData = ApplicationResponse
+
+export type ApplicationsCreateError = ApplicationErrors
+
+export type ApplicationsDetailData = ApplicationResponse
+
+export interface ApplicationsUpdatePayload {
+  application: {
+    name?: string
+    hostnames?: string[]
+  }
+}
+
+export type ApplicationsUpdateData = ApplicationResponse
+
+export type ApplicationsUpdateError = ApplicationErrors
+
+export type ApplicationsDeleteData = any
 
 export interface CurrentUserWhoamiResponse {
   id: number
@@ -53,6 +94,8 @@ export interface GroupsUpdatePayload {
 export type GroupsUpdateData = GroupResponse
 
 export type GroupsUpdateError = GroupErrors
+
+export type GroupsDeleteData = any
 
 export type GroupsAddUserData = any
 
@@ -99,29 +142,101 @@ export type UsersUpdateData = UserResponse
 
 export type UsersUpdateError = UserErrors
 
+export type UsersDeleteData = any
+
 export type UsersAddGroupData = any
 
 export type UsersRemoveGroupData = any
 
-export namespace CurrentUser {
+export namespace Admin {
   /**
    * No description
-   * @name Whoami
-   * @summary whoami
-   * @request GET:/current_user
-   * @response `200` `CurrentUserWhoamiResponse` successful
+   * @name ApplicationsList
+   * @summary list
+   * @request GET:/admin/applications
+   * @response `200` `ApplicationsListResponse` successful
    * @response `401` `void` unauthorized
    */
-  export namespace Whoami {
+  export namespace ApplicationsList {
     export type RequestParams = {}
     export type RequestQuery = {}
     export type RequestBody = never
     export type RequestHeaders = {}
-    export type ResponseBody = CurrentUserWhoamiResponse
+    export type ResponseBody = ApplicationsListResponse
   }
-}
 
-export namespace Admin {
+  /**
+   * No description
+   * @name ApplicationsCreate
+   * @summary create
+   * @request POST:/admin/applications
+   * @response `200` `ApplicationsCreateData` successful
+   * @response `401` `void` unauthorized
+   * @response `422` `ApplicationErrors` unprocessible entitiy
+   */
+  export namespace ApplicationsCreate {
+    export type RequestParams = {}
+    export type RequestQuery = {}
+    export type RequestBody = ApplicationsCreatePayload
+    export type RequestHeaders = {}
+    export type ResponseBody = ApplicationsCreateData
+  }
+
+  /**
+   * No description
+   * @name ApplicationsDetail
+   * @summary show
+   * @request GET:/admin/applications/{id}
+   * @response `200` `ApplicationsDetailData` successful
+   * @response `401` `void` unauthorized
+   */
+  export namespace ApplicationsDetail {
+    export type RequestParams = {
+      id: number | string
+    }
+    export type RequestQuery = {}
+    export type RequestBody = never
+    export type RequestHeaders = {}
+    export type ResponseBody = ApplicationsDetailData
+  }
+
+  /**
+   * No description
+   * @name ApplicationsUpdate
+   * @summary update
+   * @request PUT:/admin/applications/{id}
+   * @response `200` `ApplicationsUpdateData` successful
+   * @response `401` `void` unauthorized
+   * @response `422` `ApplicationErrors` unprocessible entitiy
+   */
+  export namespace ApplicationsUpdate {
+    export type RequestParams = {
+      id: number | string
+    }
+    export type RequestQuery = {}
+    export type RequestBody = ApplicationsUpdatePayload
+    export type RequestHeaders = {}
+    export type ResponseBody = ApplicationsUpdateData
+  }
+
+  /**
+   * No description
+   * @name ApplicationsDelete
+   * @summary destroy
+   * @request DELETE:/admin/applications/{id}
+   * @response `204` `ApplicationsDeleteData` successful
+   * @response `401` `void` unauthorized
+   */
+  export namespace ApplicationsDelete {
+    export type RequestParams = {
+      id: number | string
+    }
+    export type RequestQuery = {}
+    export type RequestBody = never
+    export type RequestHeaders = {}
+    export type ResponseBody = ApplicationsDeleteData
+  }
+
   /**
    * No description
    * @name GroupsList
@@ -190,6 +305,24 @@ export namespace Admin {
     export type RequestBody = GroupsUpdatePayload
     export type RequestHeaders = {}
     export type ResponseBody = GroupsUpdateData
+  }
+
+  /**
+   * No description
+   * @name GroupsDelete
+   * @summary destroy
+   * @request DELETE:/admin/groups/{id}
+   * @response `204` `GroupsDeleteData` successful
+   * @response `401` `void` unauthorized
+   */
+  export namespace GroupsDelete {
+    export type RequestParams = {
+      id: number
+    }
+    export type RequestQuery = {}
+    export type RequestBody = never
+    export type RequestHeaders = {}
+    export type ResponseBody = GroupsDeleteData
   }
 
   /**
@@ -300,6 +433,24 @@ export namespace Admin {
 
   /**
    * No description
+   * @name UsersDelete
+   * @summary destroy
+   * @request DELETE:/admin/users/{id}
+   * @response `204` `UsersDeleteData` successful
+   * @response `401` `void` unauthorized
+   */
+  export namespace UsersDelete {
+    export type RequestParams = {
+      id: number
+    }
+    export type RequestQuery = {}
+    export type RequestBody = never
+    export type RequestHeaders = {}
+    export type ResponseBody = UsersDeleteData
+  }
+
+  /**
+   * No description
    * @name UsersAddGroup
    * @summary add_group
    * @request PUT:/admin/users/{id}/groups/{group_id}
@@ -332,6 +483,24 @@ export namespace Admin {
     export type RequestBody = never
     export type RequestHeaders = {}
     export type ResponseBody = UsersRemoveGroupData
+  }
+}
+
+export namespace CurrentUser {
+  /**
+   * No description
+   * @name Whoami
+   * @summary whoami
+   * @request GET:/current_user
+   * @response `200` `CurrentUserWhoamiResponse` successful
+   * @response `401` `void` unauthorized
+   */
+  export namespace Whoami {
+    export type RequestParams = {}
+    export type RequestQuery = {}
+    export type RequestBody = never
+    export type RequestHeaders = {}
+    export type ResponseBody = CurrentUserWhoamiResponse
   }
 }
 
@@ -574,25 +743,97 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version v1
  */
 export class AuthrApi<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  currentUser = {
+  admin = {
     /**
      * No description
      *
-     * @name Whoami
-     * @summary whoami
-     * @request GET:/current_user
-     * @response `200` `CurrentUserWhoamiResponse` successful
+     * @name ApplicationsList
+     * @summary list
+     * @request GET:/admin/applications
+     * @response `200` `ApplicationsListResponse` successful
      * @response `401` `void` unauthorized
      */
-    whoami: (params: RequestParams = {}) =>
-      this.request<CurrentUserWhoamiResponse, void>({
-        path: `/current_user`,
+    applicationsList: (params: RequestParams = {}) =>
+      this.request<ApplicationsListResponse, void>({
+        path: `/admin/applications`,
         method: 'GET',
         format: 'json',
         ...params,
       }),
-  }
-  admin = {
+
+    /**
+     * No description
+     *
+     * @name ApplicationsCreate
+     * @summary create
+     * @request POST:/admin/applications
+     * @response `200` `ApplicationsCreateData` successful
+     * @response `401` `void` unauthorized
+     * @response `422` `ApplicationErrors` unprocessible entitiy
+     */
+    applicationsCreate: (data: ApplicationsCreatePayload, params: RequestParams = {}) =>
+      this.request<ApplicationsCreateData, ApplicationsCreateError>({
+        path: `/admin/applications`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ApplicationsDetail
+     * @summary show
+     * @request GET:/admin/applications/{id}
+     * @response `200` `ApplicationsDetailData` successful
+     * @response `401` `void` unauthorized
+     */
+    applicationsDetail: (id: number | string, params: RequestParams = {}) =>
+      this.request<ApplicationsDetailData, void>({
+        path: `/admin/applications/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ApplicationsUpdate
+     * @summary update
+     * @request PUT:/admin/applications/{id}
+     * @response `200` `ApplicationsUpdateData` successful
+     * @response `401` `void` unauthorized
+     * @response `422` `ApplicationErrors` unprocessible entitiy
+     */
+    applicationsUpdate: (id: number | string, data: ApplicationsUpdatePayload, params: RequestParams = {}) =>
+      this.request<ApplicationsUpdateData, ApplicationsUpdateError>({
+        path: `/admin/applications/${id}`,
+        method: 'PUT',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ApplicationsDelete
+     * @summary destroy
+     * @request DELETE:/admin/applications/{id}
+     * @response `204` `ApplicationsDeleteData` successful
+     * @response `401` `void` unauthorized
+     */
+    applicationsDelete: (id: number | string, params: RequestParams = {}) =>
+      this.request<ApplicationsDeleteData, void>({
+        path: `/admin/applications/${id}`,
+        method: 'DELETE',
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -664,6 +905,22 @@ export class AuthrApi<SecurityDataType extends unknown> extends HttpClient<Secur
         body: data,
         type: ContentType.Json,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name GroupsDelete
+     * @summary destroy
+     * @request DELETE:/admin/groups/{id}
+     * @response `204` `GroupsDeleteData` successful
+     * @response `401` `void` unauthorized
+     */
+    groupsDelete: (id: number, params: RequestParams = {}) =>
+      this.request<GroupsDeleteData, void>({
+        path: `/admin/groups/${id}`,
+        method: 'DELETE',
         ...params,
       }),
 
@@ -774,6 +1031,22 @@ export class AuthrApi<SecurityDataType extends unknown> extends HttpClient<Secur
     /**
      * No description
      *
+     * @name UsersDelete
+     * @summary destroy
+     * @request DELETE:/admin/users/{id}
+     * @response `204` `UsersDeleteData` successful
+     * @response `401` `void` unauthorized
+     */
+    usersDelete: (id: number, params: RequestParams = {}) =>
+      this.request<UsersDeleteData, void>({
+        path: `/admin/users/${id}`,
+        method: 'DELETE',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name UsersAddGroup
      * @summary add_group
      * @request PUT:/admin/users/{id}/groups/{group_id}
@@ -798,6 +1071,24 @@ export class AuthrApi<SecurityDataType extends unknown> extends HttpClient<Secur
       this.request<UsersRemoveGroupData, any>({
         path: `/admin/users/${id}/groups/${groupId}`,
         method: 'DELETE',
+        ...params,
+      }),
+  }
+  currentUser = {
+    /**
+     * No description
+     *
+     * @name Whoami
+     * @summary whoami
+     * @request GET:/current_user
+     * @response `200` `CurrentUserWhoamiResponse` successful
+     * @response `401` `void` unauthorized
+     */
+    whoami: (params: RequestParams = {}) =>
+      this.request<CurrentUserWhoamiResponse, void>({
+        path: `/current_user`,
+        method: 'GET',
+        format: 'json',
         ...params,
       }),
   }

@@ -1,35 +1,31 @@
 require 'swagger_helper'
 
 RSpec.describe 'admin', type: :request do
-  describe 'users' do
-    global_schema :user_response, {
-      name: 'UserResponse',
+  describe 'applications' do
+    global_schema :application_response, {
+      name: 'AppicationResponse',
       type: :object,
       properties: {
         id: { type: :integer },
         name: { type: :string },
-        username: { type: :string },
-        group_ids: { type: :array, items: { type: :integer } }
+        hostnames: { type: :array, items: { type: :string } },
+        source: { type: :string }
       },
-      required: %i[ id name username group_ids ]
+      required: %i[ id name hostnames source ]
     }
 
     create_update_schema = {
       type: :object,
       properties: {
         name: { type: :string },
-        username: { type: :string },
-        password: { type: :string },
-        password_confirmation: { type: :string },
-        group_ids: { type: :array, items: { type: :integer } }
+        hostnames: { type: :array, items: { type: :string } }
       }
     }
 
-    error_schema :user_errors, %i[ name username password password_confirmation group_ids ]
+    error_schema :application_errors, %i[ name hostnames source ]
 
-    path '/admin/users' do
+    path '/admin/applications' do
       get('list') do
-        # operationId :list
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -38,7 +34,7 @@ RSpec.describe 'admin', type: :request do
           }
         end
         response(200, 'successful') do
-          schema name: 'UsersListResponse', type: :array, items: schema_ref_obj(:user_response)
+          schema name: 'ApplicationsListResponse', type: :array, items: schema_ref_obj(:application_response)
           run_test!
         end
 
@@ -48,14 +44,14 @@ RSpec.describe 'admin', type: :request do
       end
 
       post('create') do
-        parameter name: :user,
+        parameter name: :application,
           in: :body,
           schema: {
             type: :object,
             properties: {
-              user: create_update_schema.dup.merge(required: %i[ name username password password_confirmation ])
+              application: create_update_schema.dup.merge(required: %i[ name hostnames ])
             },
-            required: %i[ user ]
+            required: %i[ application ]
           }
 
         after do |example|
@@ -67,13 +63,13 @@ RSpec.describe 'admin', type: :request do
         end
 
         response(200, 'successful') do
-          schema schema_ref_obj(:user_response)
-          let(:user) { build(:user) }
+          schema schema_ref_obj(:application_response)
+          let(:application) { build(:application) }
           run_test!
         end
         response(422, 'unprocessible entitiy') do
-          schema schema_ref_obj(:user_errors).merge(name: 'UserCreateErrorResponse')
-          let(:user) { User.new }
+          schema schema_ref_obj(:application_errors).merge(name: 'ApplicationCreateErrorResponse')
+          let(:application) { Application.new }
           run_test!
         end
         response(401, 'unauthorized') do
@@ -82,8 +78,8 @@ RSpec.describe 'admin', type: :request do
       end
     end
 
-    path '/admin/users/{id}' do
-      parameter name: :id, in: :path, type: :integer
+    path '/admin/applications/{id}' do
+      parameter name: :id, in: :path, type: [ :integer, :string ]
 
       get('show') do
         after do |example|
@@ -94,9 +90,9 @@ RSpec.describe 'admin', type: :request do
           }
         end
         response(200, 'successful') do
-          schema schema_ref_obj(:user_response)
-          let(:user) { create(:user) }
-          let(:id) { user.id }
+          schema schema_ref_obj(:application_response)
+          let(:application) { create(:application) }
+          let(:id) { application.id }
           run_test!
         end
 
@@ -106,14 +102,14 @@ RSpec.describe 'admin', type: :request do
       end
 
       put('update') do
-        parameter name: :user,
+        parameter name: :application,
           in: :body,
           schema: {
             type: :object,
             properties: {
-              user: create_update_schema.dup
+              application: create_update_schema.dup
             },
-            required: %i[ user ]
+            required: %i[ application ]
           }
 
         after do |example|
@@ -125,21 +121,22 @@ RSpec.describe 'admin', type: :request do
         end
 
         response(200, 'successful') do
-          schema schema_ref_obj(:user_response)
-          let(:user) { create(:user) }
-          let(:id) { user.id }
+          schema schema_ref_obj(:application_response)
+          let(:application) { create(:application) }
+          let(:id) { application.id }
           run_test!
         end
         response(422, 'unprocessible entitiy') do
-          let(:user) { create(:user) }
-          let(:id) { user.id }
-          schema schema_ref_obj(:user_errors).merge(name: 'UserCreateErrorResponse')
+          let(:application) { create(:application) }
+          let(:id) { application.id }
+          schema schema_ref_obj(:application_errors).merge(name: 'ApplicationCreateErrorResponse')
           run_test!
         end
         response(401, 'unauthorized') do
           run_test!
         end
       end
+
       delete('destroy') do
         after do |example|
           example.metadata[:response][:content] = {
@@ -149,39 +146,12 @@ RSpec.describe 'admin', type: :request do
           }
         end
         response(204, 'successful') do
-          let(:user) { create(:user) }
-          let(:id) { user.id }
+          let(:application) { create(:application) }
+          let(:id) { application.id }
           run_test!
         end
 
         response(401, 'unauthorized') do
-          run_test!
-        end
-      end
-    end
-
-    path '/admin/users/{id}/groups/{group_id}' do
-      parameter name: :id, in: :path, type: :integer
-      parameter name: :group_id, in: :path, type: :integer
-
-      put 'add_group' do
-        operationId :usersAddGroup
-        response 200, 'successful' do
-          let(:user) { create(:user) }
-          let(:id) { user.id }
-          let(:group) { create(:group) }
-          let(:group_id) { group.id }
-          run_test!
-        end
-      end
-
-      delete 'remove_group' do
-        operationId :usersRemoveGroup
-        response 200, 'successful' do
-          let(:user) { create(:user) }
-          let(:id) { user.id }
-          let(:group) { create(:group) }
-          let(:group_id) { group.id }
           run_test!
         end
       end

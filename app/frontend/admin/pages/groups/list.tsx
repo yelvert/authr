@@ -1,18 +1,13 @@
 import { FunctionComponent } from "react"
-import { Spinner, Table } from "react-bootstrap"
+import { Table } from "react-bootstrap"
 import { NavLink } from "react-router"
-import AuthrApiClient from "@sdk"
-import useAsync from "@app/shared/utils/useAsync"
+import { GroupResponse } from "@sdk"
 
-export const GroupsIndex : FunctionComponent = () => {
-  const { loading, error, value} = useAsync(() => AuthrApiClient.admin.groupsList())
-  if (loading) return <div className="d-flex justify-content-center">
-    <Spinner animation="grow" variant="light" style={{width: '10rem', height: '10rem'}} />
-  </div>
-  if (error) return <div className="d-flex justify-content-center">
-    Error loading Groups, reload and try again.
-  </div>
-  const groups = value!.data
+export interface IGroupsListProps {
+  groups : GroupResponse[]
+}
+
+export const GroupsList : FunctionComponent<IGroupsListProps> = ({ groups }) => {
   return <Table striped bordered hover>
     <thead>
       <tr>
@@ -33,4 +28,4 @@ export const GroupsIndex : FunctionComponent = () => {
   </Table>
 }
 
-export default GroupsIndex
+export default GroupsList

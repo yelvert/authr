@@ -5,6 +5,7 @@ import { LightDarkModeSwitch } from '@app/shared/LightDarkModeSwitch'
 import { NavLink } from 'react-router'
 import userRoutes from './pages/users/routes'
 import groupRoutes from './pages/groups/routes'
+import applicationsRoutes from './pages/applications/routes'
 
 export const Header : FunctionComponent = () => {
   const currentUser = useCurrentUser()
@@ -21,6 +22,7 @@ export const Header : FunctionComponent = () => {
           <NavLink to={`/`} className="nav-link">Home</NavLink>
           <NavLink to={`${userRoutes.path}`} className="nav-link">Users</NavLink>
           <NavLink to={`${groupRoutes.path}`} className="nav-link">Groups</NavLink>
+          <NavLink to={`${applicationsRoutes.path}`} className="nav-link">Applications</NavLink>
         </Nav>
         <Nav className="flex-row flex-wrap ms-md-auto">
           <Nav.Item className="d-flex align-items-center">

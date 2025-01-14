@@ -1,5 +1,5 @@
 import { RouteObject, useLoaderData, useParams } from "react-router";
-import { GroupsIndex } from "./list";
+import { GroupsList } from "./list";
 import GroupNew from "./new";
 import GroupDetails from "./details";
 import AuthrApiClient from "@app/sdk";
@@ -10,7 +10,8 @@ export const groupsRoutes : RouteObject = {
   children: [
     {
       index: true,
-      Component: GroupsIndex,
+      loader: () => AuthrApiClient.admin.groupsList(),
+      Component: () => <GroupsList groups={useLoaderData()} />,
     },
     {
       path: "new",

@@ -16,19 +16,20 @@ Rails.application.routes.draw do
   end
 
   get "/admin/app(/*path)", to: "admin#index", as: :admin
-  namespace :admin do
+  namespace :admin, only: %i[ index show create update destroy ] do
     resources :users do
       member do
         put "/groups/:group_id", action: :add_group, as: :add_group
         delete "/groups/:group_id", action: :remove_group, as: :remove_group
       end
     end
-    resources :groups do
+    resources :groups, only: %i[ index show create update destroy ] do
       member do
         put "/users/:user_id", action: :add_user, as: :add_user
         delete "/users/:user_id", action: :remove_user, as: :remove_user
       end
     end
+    resources :applications, only: %i[ index show create update destroy ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
