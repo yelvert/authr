@@ -1,4 +1,4 @@
-import { RouteObject, useLoaderData, useParams } from "react-router";
+import { RouteObject, UIMatch, useLoaderData, useParams, useRouteLoaderData } from "react-router";
 import { UsersList } from "./list";
 import UserNew from "./new";
 import UserDetails from "./details";
@@ -24,7 +24,7 @@ export const usersRoutes : RouteObject = {
         return AuthrApiClient.admin.usersDetail(Number(params.userId))
       },
       Component: () => <UserDetails user={useLoaderData()} />,
-      handle: { breadcrumb: 'Edit' },
+      handle: { breadcrumb: ({match} : { match: UIMatch }) => useRouteLoaderData(match.id)?.name },
     },
   ],
 }

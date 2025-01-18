@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :group do
-    name { Faker::String.random }
+    name { Faker::Book.genre }
   end
 end

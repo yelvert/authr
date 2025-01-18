@@ -7,7 +7,7 @@ import { isFunction } from "lodash"
 interface IRoute {
   Data: {},
   Handle: {
-    breadcrumb ?: string | (() => string)
+    breadcrumb ?: string | ((ops : { match: IMatch }) => string)
   }
 }
 
@@ -15,7 +15,7 @@ type IMatch = UIMatch<IRoute["Data"], IRoute["Handle"]>
 
 export const Content : FunctionComponent = () => {
   const matches = useMatches() as IMatch[]
-  const breadcrumbs = useMemo(() => matches.filter(x => x.handle?.breadcrumb), [matches])
+  const breadcrumbs = matches.filter(x => x.handle?.breadcrumb)
   const navigation = useNavigation()
   return <Container className="my-3 position-relative">
     <div className="position-absolute top-0 w-25" style={{ right: '1rem' }}>
@@ -24,7 +24,7 @@ export const Content : FunctionComponent = () => {
     <Breadcrumb>
       {breadcrumbs.map((x, i) =>
         <Breadcrumb.Item key={x.id} linkAs={NavLink} linkProps={{to: x}} active={i == breadcrumbs.length - 1}>
-          { isFunction(x.handle.breadcrumb) ? x.handle.breadcrumb() : x.handle.breadcrumb }
+          { isFunction(x.handle.breadcrumb) ? <x.handle.breadcrumb match={x} /> : x.handle.breadcrumb }
         </Breadcrumb.Item>
       )}
     </Breadcrumb>

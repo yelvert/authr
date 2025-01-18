@@ -29,7 +29,6 @@ RSpec.describe 'admin', type: :request do
 
     path '/admin/users' do
       get('list') do
-        # operationId :list
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {

@@ -1,4 +1,4 @@
-import { RouteObject, useLoaderData, useParams } from "react-router";
+import { RouteObject, UIMatch, useLoaderData, useParams, useRouteLoaderData } from "react-router";
 import { GroupsList } from "./list";
 import GroupNew from "./new";
 import GroupDetails from "./details";
@@ -24,7 +24,7 @@ export const groupsRoutes : RouteObject = {
         return AuthrApiClient.admin.groupsDetail(Number(params.groupId))
       },
       Component: () => <GroupDetails group={useLoaderData()} />,
-      handle: { breadcrumb: 'Edit' },
+      handle: { breadcrumb: ({match} : { match: UIMatch }) => useRouteLoaderData(match.id)?.name },
     },
   ],
 }

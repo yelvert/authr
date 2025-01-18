@@ -20,7 +20,7 @@ paths:
                 name: ApplicationsListResponse
                 type: array
                 items:
-                  "$ref": "#/components/schemas/application_response"
+                  "$ref": "#/components/schemas/application_list_response"
         '401':
           description: unauthorized
     post:
@@ -32,7 +32,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/application_response"
+                "$ref": "#/components/schemas/application_detail_response"
         '422':
           description: unprocessible entitiy
           content:
@@ -57,9 +57,20 @@ paths:
                       type: array
                       items:
                         type: string
+                    active:
+                      type: boolean
+                    groups_custom_ids:
+                      type: array
+                      items:
+                        type: integer
+                    users_custom_ids:
+                      type: array
+                      items:
+                        type: integer
                   required:
                   - name
                   - hostnames
+                  - active
               required:
               - application
   "/admin/applications/{id}":
@@ -79,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/application_response"
+                "$ref": "#/components/schemas/application_detail_response"
         '401':
           description: unauthorized
     put:
@@ -91,7 +102,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/application_response"
+                "$ref": "#/components/schemas/application_detail_response"
         '422':
           description: unprocessible entitiy
           content:
@@ -116,6 +127,16 @@ paths:
                       type: array
                       items:
                         type: string
+                    active:
+                      type: boolean
+                    groups_custom_ids:
+                      type: array
+                      items:
+                        type: integer
+                    users_custom_ids:
+                      type: array
+                      items:
+                        type: integer
               required:
               - application
     delete:
@@ -469,8 +490,8 @@ components:
       type: array
       items:
         type: string
-    application_response:
-      name: AppicationResponse
+    application_list_response:
+      name: AppicationListResponse
       type: object
       properties:
         id:
@@ -481,13 +502,66 @@ components:
           type: array
           items:
             type: string
+        active:
+          type: boolean
         source:
           type: string
+          enum:
+          - custom
+          - docker
       required:
       - id
       - name
       - hostnames
       - source
+      - active
+    application_detail_response:
+      name: ApplicationDetailResponse
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        hostnames:
+          type: array
+          items:
+            type: string
+        active:
+          type: boolean
+        source:
+          type: string
+          enum:
+          - custom
+          - docker
+        groups_custom_ids:
+          type: array
+          items:
+            type: integer
+        groups_generated_ids:
+          type: array
+          items:
+            type: integer
+        users_custom_ids:
+          type: array
+          items:
+            type: integer
+        users_generated_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - id
+      - name
+      - hostnames
+      - source
+      - active
+      - groups
+      - users
+      - groups_custom_ids
+      - groups_generated_ids
+      - users_custom_ids
+      - users_generated_ids
     application_errors:
       type: object
       properties:
@@ -496,6 +570,12 @@ components:
         hostnames:
           "$ref": "#/components/schemas/attribute_error"
         source:
+          "$ref": "#/components/schemas/attribute_error"
+        active:
+          "$ref": "#/components/schemas/attribute_error"
+        groups_custom_ids:
+          "$ref": "#/components/schemas/attribute_error"
+        users_custom_ids:
           "$ref": "#/components/schemas/attribute_error"
     group_response:
       name: GroupResponse

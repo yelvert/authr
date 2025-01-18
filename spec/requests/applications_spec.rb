@@ -2,27 +2,49 @@ require 'swagger_helper'
 
 RSpec.describe 'admin', type: :request do
   describe 'applications' do
-    global_schema :application_response, {
-      name: 'AppicationResponse',
+    global_schema :application_list_response, {
+      name: 'AppicationListResponse',
       type: :object,
       properties: {
         id: { type: :integer },
         name: { type: :string },
         hostnames: { type: :array, items: { type: :string } },
-        source: { type: :string }
+        active: { type: :boolean },
+        source: { type: :string, enum: %i[ custom docker ] }
+
       },
-      required: %i[ id name hostnames source ]
+      required: %i[ id name hostnames source active ]
+    }
+
+    global_schema :application_detail_response, {
+      name: 'ApplicationDetailResponse',
+      type: :object,
+      properties: {
+        id: { type: :integer },
+        name: { type: :string },
+        hostnames: { type: :array, items: { type: :string } },
+        active: { type: :boolean },
+        source: { type: :string, enum: %i[ custom docker ] },
+        groups_custom_ids: { type: :array, items: { type: :integer } },
+        groups_generated_ids: { type: :array, items: { type: :integer } },
+        users_custom_ids: { type: :array, items: { type: :integer } },
+        users_generated_ids: { type: :array, items: { type: :integer } }
+      },
+      required: %i[ id name hostnames source active groups users groups_custom_ids groups_generated_ids users_custom_ids users_generated_ids ]
     }
 
     create_update_schema = {
       type: :object,
       properties: {
         name: { type: :string },
-        hostnames: { type: :array, items: { type: :string } }
+        hostnames: { type: :array, items: { type: :string } },
+        active: { type: :boolean },
+        groups_custom_ids: { type: :array, items: { type: :integer } },
+        users_custom_ids: { type: :array, items: { type: :integer } }
       }
     }
 
-    error_schema :application_errors, %i[ name hostnames source ]
+    error_schema :application_errors, %i[ name hostnames source active groups_custom_ids users_custom_ids ]
 
     path '/admin/applications' do
       get('list') do
@@ -34,7 +56,7 @@ RSpec.describe 'admin', type: :request do
           }
         end
         response(200, 'successful') do
-          schema name: 'ApplicationsListResponse', type: :array, items: schema_ref_obj(:application_response)
+          schema name: 'ApplicationsListResponse', type: :array, items: schema_ref_obj(:application_list_response)
           run_test!
         end
 
@@ -49,7 +71,7 @@ RSpec.describe 'admin', type: :request do
           schema: {
             type: :object,
             properties: {
-              application: create_update_schema.dup.merge(required: %i[ name hostnames ])
+              application: create_update_schema.dup.merge(required: %i[ name hostnames active ])
             },
             required: %i[ application ]
           }
@@ -63,7 +85,7 @@ RSpec.describe 'admin', type: :request do
         end
 
         response(200, 'successful') do
-          schema schema_ref_obj(:application_response)
+          schema schema_ref_obj(:application_detail_response)
           let(:application) { build(:application) }
           run_test!
         end
@@ -90,7 +112,7 @@ RSpec.describe 'admin', type: :request do
           }
         end
         response(200, 'successful') do
-          schema schema_ref_obj(:application_response)
+          schema schema_ref_obj(:application_detail_response)
           let(:application) { create(:application) }
           let(:id) { application.id }
           run_test!
@@ -121,7 +143,7 @@ RSpec.describe 'admin', type: :request do
         end
 
         response(200, 'successful') do
-          schema schema_ref_obj(:application_response)
+          schema schema_ref_obj(:application_detail_response)
           let(:application) { create(:application) }
           let(:id) { application.id }
           run_test!

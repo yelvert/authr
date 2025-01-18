@@ -2,6 +2,9 @@ class User < ApplicationRecord
   has_many :user_groups, autosave: true
   has_many :groups, through: :user_groups, dependent: :destroy
 
+  has_many :application_users, dependent: :destroy
+  has_many :applications, through: :application_users
+
   validates :username, presence: true, uniqueness: true
 
   attr_accessor :password

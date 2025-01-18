@@ -1,11 +1,25 @@
 import react, { FunctionComponent, useCallback } from 'react'
 import LoginForm from '@app/shared/LoginForm'
+import { Card } from 'react-bootstrap'
+import AuthrConfig from '@app/shared/useAuthrConfig'
+import { withLightDarkMode } from '@app/shared/LightDarkModeSwitch'
 
-export const App : FunctionComponent = () => {
+const _App : FunctionComponent = () => {
   const loginHandler = useCallback(() => {
     document.location = "/"
   }, [])
-  return <LoginForm onSuccess={loginHandler} />
+  return <div className="d-flex h-100">
+    <Card className="mx-auto my-auto">
+      <Card.Body>
+        <Card.Title className="d-flex w-100">
+          <div className="mx-auto">{ AuthrConfig.siteName }</div>
+        </Card.Title>
+        <LoginForm onSuccess={loginHandler} />
+      </Card.Body>
+    </Card>
+  </div>
 }
+
+export const App = withLightDarkMode(_App)
 
 export default App

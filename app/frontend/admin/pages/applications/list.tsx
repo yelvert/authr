@@ -25,7 +25,7 @@ export const ApplicationsList : FunctionComponent<IApplicationsListProps> = ({ a
           <td>{application.hostnames.join(', ')}</td>
           <td>{application.source}</td>
           <td>
-            <NavLink to={`/applications/${application.source == 'database' ? application.id : btoa(application.name)}`} className="link-primary">Edit</NavLink>
+            <NavLink to={`/applications/${application.id}`} className="link-primary">Edit</NavLink>
           </td>
         </tr>) }
     </tbody>

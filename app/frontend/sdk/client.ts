@@ -1,16 +1,32 @@
 export type AttributeError = string[]
 
-export interface ApplicationResponse {
+export interface ApplicationListResponse {
   id: number
   name: string
   hostnames: string[]
-  source: string
+  active: boolean
+  source: 'custom' | 'docker'
+}
+
+export interface ApplicationDetailResponse {
+  id: number
+  name: string
+  hostnames: string[]
+  active: boolean
+  source: 'custom' | 'docker'
+  groups_custom_ids: number[]
+  groups_generated_ids: number[]
+  users_custom_ids: number[]
+  users_generated_ids: number[]
 }
 
 export interface ApplicationErrors {
   name?: AttributeError
   hostnames?: AttributeError
   source?: AttributeError
+  active?: AttributeError
+  groups_custom_ids?: AttributeError
+  users_custom_ids?: AttributeError
 }
 
 export interface GroupResponse {
@@ -37,29 +53,35 @@ export interface UserErrors {
   group_ids?: AttributeError
 }
 
-export type ApplicationsListResponse = ApplicationResponse[]
+export type ApplicationsListResponse = ApplicationListResponse[]
 
 export interface ApplicationsCreatePayload {
   application: {
     name: string
     hostnames: string[]
+    active: boolean
+    groups_custom_ids?: number[]
+    users_custom_ids?: number[]
   }
 }
 
-export type ApplicationsCreateData = ApplicationResponse
+export type ApplicationsCreateData = ApplicationDetailResponse
 
 export type ApplicationsCreateError = ApplicationErrors
 
-export type ApplicationsDetailData = ApplicationResponse
+export type ApplicationsDetailData = ApplicationDetailResponse
 
 export interface ApplicationsUpdatePayload {
   application: {
     name?: string
     hostnames?: string[]
+    active?: boolean
+    groups_custom_ids?: number[]
+    users_custom_ids?: number[]
   }
 }
 
-export type ApplicationsUpdateData = ApplicationResponse
+export type ApplicationsUpdateData = ApplicationDetailResponse
 
 export type ApplicationsUpdateError = ApplicationErrors
 

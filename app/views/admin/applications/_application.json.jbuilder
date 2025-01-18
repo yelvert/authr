@@ -1,1 +1,1 @@
-json.extract! application, :id, :name, :source, :hostnames
+json.extract! application, :id, :name, :hostnames, :active, :source

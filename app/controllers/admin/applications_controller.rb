@@ -2,7 +2,7 @@ class Admin::ApplicationsController < Admin::ApplicationController
   before_action :set_application, only: %i[ show update destroy ]
 
   def index
-    @applications = Application.all.to_a + Application.from_docker
+    @applications = Application.all
   end
 
   def show
@@ -44,12 +44,7 @@ class Admin::ApplicationsController < Admin::ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_application
-      if params.expect(:id) =~ /\A\d+\z/
-        @application = Application.find(params.expect(:id))
-      else
-        @application = Application.find_docker(Base64.decode64(params.expect(:id)))
-        raise ActiveRecord::RecordNotFound unless @application
-      end
+      @application = Application.find(params.expect(:id))
     end
 
     def set_user

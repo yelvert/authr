@@ -4,6 +4,9 @@ class Admin::UsersController < Admin::ApplicationController
 
   def index
     @users = User.all
+    if params[:filters].present?
+      @users = @users.where(id: params[:filters][:id]) if params[:filters][:id]
+    end
   end
 
   def show

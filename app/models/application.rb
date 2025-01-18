@@ -1,31 +1,27 @@
 class Application < ApplicationRecord
+  has_many :application_groups, dependent: :destroy
+  has_many :groups, through: :application_groups
+
+  has_many :application_groups_custom, -> { where(generated: false) }, dependent: :destroy, class_name: :ApplicationGroup
+  has_many :groups_custom, through: :application_groups_custom, source: :group, inverse_of: :application_groups
+
+  has_many :application_groups_generated, -> { where(generated: true) }, dependent: :destroy, class_name: :ApplicationGroup
+  has_many :groups_generated, through: :application_groups_generated, source: :group, inverse_of: :application_groups
+
+
+  has_many :application_users, dependent: :destroy
+  has_many :users, through: :application_users
+
+  has_many :application_users_custom, -> { where(generated: false) }, dependent: :destroy, class_name: :ApplicationUser
+  has_many :users_custom, through: :application_users_custom, source: :user, inverse_of: :application_users
+
+  has_many :application_users_generated, -> { where(generated: true) }, dependent: :destroy, class_name: :ApplicationUser
+  has_many :users_generated, through: :application_users_generated, source: :user, inverse_of: :application_users
+
+
   attribute :hostnames, :json_array, default: -> { [] }
-  attribute :source, :string, default: :database
-  attribute :docker_definition, :hash
-  validate do
-    errors.add(:source, "Cannot save an Application with a source other than database") unless source == "database"
-  end
 
-  class << self
-    def from_docker
-      Docker::Container.all(all: true, filters: { label: [ "authr.host" ] }.to_json).map do |container|
-        new(
-          name: container.info["Names"].first,
-          hostnames: container.info["Labels"]["authr.host"].split(/,\s?/),
-          source: :docker,
-          docker_definition: container.info,
-        )
-      end
-    end
+  validates :source, inclusion: { in: %w[ custom docker ], message: 'Must be one of "custom" or "docker"' }
 
-    def find_docker(name)
-      container = Docker::Container.all(all: true, filters: { name: [ name ] }.to_json).first
-      new(
-        name: container.info["Names"].first,
-        hostnames: container.info["Labels"]["authr.host"].split(/,\s?/),
-        source: :docker,
-        docker_definition: container.info,
-      )
-    end
-  end
+  scope :for_hostname, ->(hostname) { where("? IN (SELECT value FROM json_each(applications.hostnames))", hostname) }
 end

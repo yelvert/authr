@@ -1,6 +1,7 @@
-import { FunctionComponent, useCallback, useState } from 'react'
+import { FunctionComponent, useCallback, useMemo, useState } from 'react'
 
 import AuthrApiClient from '@sdk'
+import { Button, FloatingLabel, Form } from 'react-bootstrap'
 
 export interface ILoginFormProps {
   onSuccess : () => void
@@ -22,25 +23,36 @@ export const LoginForm : FunctionComponent<ILoginFormProps> = ({onSuccess}) => {
       setSubmitting(false)
     })
   }, [onSuccess])
+  const isUnauthorized = useMemo(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    return searchParams.has('unauthorized')
+  }, [])
   return (
-    <form action={login}>
-      { error && <div>Incorrect username or password</div> }
-      <div>
-        <label>
-          Username:
-          <input type="text" name="username" required />
-        </label>
+    <Form action={login}>
+      <div className="mb-3">
+        <Form.Text className="text-danger">
+          { isUnauthorized && "You do not have permission to access this application." } 
+          { error && "Incorrect username or password" }
+        </Form.Text>
       </div>
-      <div>
-        <label>
-          Password:
-          <input type="password" name="password" required />
-        </label>
+      <FloatingLabel
+        controlId="username"
+        label="Username"
+        className="mb-3"
+      >
+        <Form.Control type="text" name="username" placeholder="Username" required />
+      </FloatingLabel>
+      <FloatingLabel
+        controlId="password"
+        label="Password"
+        className="mb-3"
+      >
+        <Form.Control type="password" name="password" placeholder="Password" required />
+      </FloatingLabel>
+      <div className="d-grid">
+        <Button size="lg" variant="primary" type="submit" disabled={submitting}>Login</Button>
       </div>
-      <div>
-        <button type="submit" disabled={submitting}>Login</button>
-      </div>
-    </form>
+    </Form>
   );
 }
 

@@ -22,6 +22,7 @@ module Authr
   CONFIG_PATH = ENV.fetch("AUTHR_CONFIG_PATH") { File.join(__dir__, "authr.yml") }
   CONFIG = ActiveSupport::OrderedOptions.new.update(
     ActiveSupport::ConfigurationFile.parse(CONFIG_PATH).deep_symbolize_keys.reverse_merge({
+      site_name: "Yelvert Home",
       ssl: false,
       cookie_name: "_authr_session",
       cookie_same_site: "Lax",

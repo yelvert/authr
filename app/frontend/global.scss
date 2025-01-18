@@ -1,2 +1,7 @@
 @import './_variables.scss';
 @import 'node_modules/bootstrap/scss/bootstrap';
+
+html, body {
+  height: 100%;
+  width: 100%;
+}

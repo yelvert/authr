@@ -23,7 +23,7 @@ export const UserForm : FunctionComponent<IUserFormProps> = ({ user, errors, onS
     onSubmit({ name, username, password, password_confirmation, group_ids })
   }, [onSubmit])
 
-  const [selectedGroupIds, setSelectedGroupIds] = useState(user.group_ids)
+  const [selectedGroupIds, setSelectedGroupIds] = useState(user.group_ids || [])
 
   const renderPassword = user.id
   ? <Button>Change Password</Button>

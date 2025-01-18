@@ -1,4 +1,4 @@
-import { RouteObject, useLoaderData, useParams } from "react-router";
+import { RouteObject, UIMatch, useLoaderData, useRouteLoaderData } from "react-router";
 import ApplicationsList from "./list";
 import ApplicationNew from "./new";
 import ApplicationDetails from "./details";
@@ -22,7 +22,7 @@ export const applicationsRoutes : RouteObject = {
       path: ":applicationId",
       loader: ({ params }) => AuthrApiClient.admin.applicationsDetail(params.applicationId!),
       Component: () => <ApplicationDetails application={useLoaderData()} />,
-      handle: { breadcrumb: 'Edit' },
+      handle: { breadcrumb: ({match} : { match: UIMatch }) => useRouteLoaderData(match.id)?.name },
     },
   ],
 }
