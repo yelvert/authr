@@ -29,6 +29,13 @@ export interface ApplicationErrors {
   users_custom_ids?: AttributeError
 }
 
+export interface CurrentUserUpdateErrors {
+  name?: AttributeError
+  username?: AttributeError
+  password?: AttributeError
+  password_confirmation?: AttributeError
+}
+
 export interface GroupResponse {
   id: number
   name: string
@@ -91,6 +98,28 @@ export interface CurrentUserWhoamiResponse {
   id: number
   name: string
   username: string
+}
+
+export interface CurrentUserUpdatePayload {
+  current_user: {
+    name?: string
+    username?: string
+    password?: string
+    password_confirmation?: string
+  }
+}
+
+export interface CurrentUserUpdateResponse {
+  id: number
+  name: string
+  username: string
+}
+
+export type CurrentUserUpdateError = {
+  name?: AttributeError
+  username?: AttributeError
+  password?: AttributeError
+  password_confirmation?: AttributeError
 }
 
 export type GroupsListResponse = GroupResponse[]
@@ -524,6 +553,29 @@ export namespace CurrentUser {
     export type RequestHeaders = {}
     export type ResponseBody = CurrentUserWhoamiResponse
   }
+
+  /**
+ * No description
+ * @name CurrentUserUpdate
+ * @summary update
+ * @request PUT:/current_user
+ * @response `200` `CurrentUserUpdateResponse` successful
+ * @response `401` `void` unauthorized
+ * @response `422` `{
+    name?: AttributeError,
+    username?: AttributeError,
+    password?: AttributeError,
+    password_confirmation?: AttributeError,
+
+}` unprocessible entitiy
+*/
+  export namespace CurrentUserUpdate {
+    export type RequestParams = {}
+    export type RequestQuery = {}
+    export type RequestBody = CurrentUserUpdatePayload
+    export type RequestHeaders = {}
+    export type ResponseBody = CurrentUserUpdateResponse
+  }
 }
 
 export namespace Session {
@@ -726,6 +778,7 @@ export class HttpClient<SecurityDataType = unknown> {
       headers: {
         ...(requestParams.headers || {}),
         ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
+        ...{ Accept: type || 'application/json' },
       },
       signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
       body: typeof body === 'undefined' || body === null ? null : payloadFormatter(body),
@@ -1110,6 +1163,32 @@ export class AuthrApi<SecurityDataType extends unknown> extends HttpClient<Secur
       this.request<CurrentUserWhoamiResponse, void>({
         path: `/current_user`,
         method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+ * No description
+ *
+ * @name CurrentUserUpdate
+ * @summary update
+ * @request PUT:/current_user
+ * @response `200` `CurrentUserUpdateResponse` successful
+ * @response `401` `void` unauthorized
+ * @response `422` `{
+    name?: AttributeError,
+    username?: AttributeError,
+    password?: AttributeError,
+    password_confirmation?: AttributeError,
+
+}` unprocessible entitiy
+ */
+    currentUserUpdate: (data: CurrentUserUpdatePayload, params: RequestParams = {}) =>
+      this.request<CurrentUserUpdateResponse, CurrentUserUpdateError>({
+        path: `/current_user`,
+        method: 'PUT',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),

@@ -1,9 +1,8 @@
-import AuthrApiClient from "@app/sdk";
-import { GroupsListResponse, UserErrors, UserResponse, UsersCreatePayload, UsersUpdatePayload } from "@app/sdk/client";
-import useAsync from "@app/shared/utils/useAsync";
 import { FunctionComponent, useCallback, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import Select from 'react-select'
+import useAsync from "@shared/utils/useAsync";
+import AuthrApiClient, { UserErrors, UserResponse, UsersCreatePayload, UsersUpdatePayload } from "@sdk";
 
 export interface IUserFormProps {
   user : UserResponse
@@ -25,30 +24,10 @@ export const UserForm : FunctionComponent<IUserFormProps> = ({ user, errors, onS
 
   const [selectedGroupIds, setSelectedGroupIds] = useState(user.group_ids || [])
 
-  const renderPassword = user.id
-  ? <Button>Change Password</Button>
-  : <>
-      <Form.Group className="mb-3" controlId="password">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" name="password" placeholder="Password" isInvalid={!!errors?.password} />
-        <Form.Control.Feedback type="invalid">
-          { errors?.password?.join(', ') }
-        </Form.Control.Feedback>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="password_confirmation">
-        <Form.Label>Confirm Password</Form.Label>
-        <Form.Control type="password" name="password_confirmation" placeholder="Confirm Password" isInvalid={!!errors?.password_confirmation} />
-        <Form.Control.Feedback type="invalid">
-          { errors?.password_confirmation?.join(', ') }
-        </Form.Control.Feedback>
-      </Form.Group>
-    </>
-
   return <Form action={handleSubmit}>
     <Form.Group className="mb-3" controlId="name">
       <Form.Label>Name</Form.Label>
-      <Form.Control type="name" name="name" placeholder="Name" defaultValue={user.name} isInvalid={!!errors?.name} />
+      <Form.Control type="text" name="name" placeholder="Name" defaultValue={user.name} isInvalid={!!errors?.name} />
       <Form.Control.Feedback type="invalid">
         { errors?.name?.join(', ') }
       </Form.Control.Feedback>
@@ -62,7 +41,7 @@ export const UserForm : FunctionComponent<IUserFormProps> = ({ user, errors, onS
       </Form.Control.Feedback>
     </Form.Group>
 
-    <Form.Group className="mb-3" controlId="username">
+    <Form.Group className="mb-3" controlId="groups">
       <Form.Label>Groups</Form.Label>
       {groups.loading || <Select
         options={groups.value?.data ?? []}
@@ -82,7 +61,21 @@ export const UserForm : FunctionComponent<IUserFormProps> = ({ user, errors, onS
       </Form.Control.Feedback>
     </Form.Group>
 
-    { renderPassword }
+    <Form.Group className="mb-3" controlId="password">
+      <Form.Label>Password</Form.Label>
+      <Form.Control type="password" name="password" placeholder="Password" isInvalid={!!errors?.password} />
+      <Form.Control.Feedback type="invalid">
+        { errors?.password?.join(', ') }
+      </Form.Control.Feedback>
+    </Form.Group>
+
+    <Form.Group className="mb-3" controlId="password_confirmation">
+      <Form.Label>Confirm Password</Form.Label>
+      <Form.Control type="password" name="password_confirmation" placeholder="Confirm Password" isInvalid={!!errors?.password_confirmation} />
+      <Form.Control.Feedback type="invalid">
+        { errors?.password_confirmation?.join(', ') }
+      </Form.Control.Feedback>
+    </Form.Group>
 
     <Button variant="primary" type="submit">
       { user.id ? "Update" : "Create" }

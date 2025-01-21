@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   scope controller: :current_user, path: "/current_user", as: :current_user do
     get "/", action: :whoami, as: :whoami
+    put "/", action: :update, as: :update
   end
 
   scope controller: :forward_auth, path: "/forward_auth", as: :forward_auth do
@@ -15,7 +16,7 @@ Rails.application.routes.draw do
     get :logout, action: :destroy
   end
 
-  get "/admin/app(/*path)", to: "admin#index", as: :admin
+  get "/app(/*path)", to: "app#index", as: :app
   namespace :admin, only: %i[ index show create update destroy ] do
     resources :users do
       member do
@@ -33,5 +34,5 @@ Rails.application.routes.draw do
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
-  root to: redirect("/admin/app", status: 302)
+  root to: redirect("/app", status: 302)
 end

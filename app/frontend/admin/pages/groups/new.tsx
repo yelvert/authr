@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback } from "react"
 import { Spinner } from "react-bootstrap"
 import AuthrApiClient, { GroupsCreatePayload } from "@sdk"
-import useRepeatableAsync from "@app/shared/utils/useRepeatableAsync"
-import useGrowl from "@app/shared/Growl"
+import useRepeatableAsync from "@shared/utils/useRepeatableAsync"
+import useGrowl from "@shared/Growl"
 import GroupForm from "./form"
 import { useNavigate } from "react-router"
 

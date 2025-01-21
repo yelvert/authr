@@ -27,7 +27,9 @@ module Authr
       cookie_name: "_authr_session",
       cookie_same_site: "Lax",
       session_expiration: 1.hour,
-      admin_username: "admin"
+      admin_username: "admin",
+      sync_docker_enabled: false,
+      sync_docker_interval: "every 30 seconds"
     })
   )
 

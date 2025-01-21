@@ -130,8 +130,6 @@ GEM
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    js_from_routes (4.0.1)
-      railties (>= 5.1, < 9)
     json (2.9.1)
     json-schema (5.1.1)
       addressable (~> 2.8)
@@ -409,7 +407,6 @@ DEPENDENCIES
   factory_bot_rails
   faker
   jbuilder
-  js_from_routes
   kamal
   propshaft
   pry

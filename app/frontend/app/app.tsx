@@ -1,14 +1,11 @@
 import { FunctionComponent } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
-import { withGrowl } from '@shared/Growl'
 import { withLightDarkMode } from '@shared/LightDarkModeSwitch'
+import { withGrowl } from '@shared/Growl'
 import { withCurrentUser } from '@shared/contexts/current_user'
+import Header from '@app/Header'
+import Content from '@app/Content'
 import { accountSettingsRoutes } from '@shared/pages/AccounSettings'
-import Header from '@admin/Header'
-import Content from '@admin/Content'
-import usersRoutes from './pages/users/routes'
-import groupsRoutes from './pages/groups/routes'
-import applicationsRoutes from './pages/applications/routes'
 
 const routes = createBrowserRouter([
   {
@@ -22,9 +19,6 @@ const routes = createBrowserRouter([
         index: true,
         element: <div>HOME</div>,
       },
-      usersRoutes,
-      groupsRoutes,
-      applicationsRoutes,
       accountSettingsRoutes,
     ],
   },

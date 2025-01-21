@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import '@app/global.scss'
-import SessionApp from '@app/sessions/app'
+import '@/global.scss'
+import SessionApp from '@sessions/app'
 
 ReactDOM.createRoot(document.body).render(
   <React.StrictMode>

@@ -2,11 +2,13 @@ import { RouteObject, UIMatch, useLoaderData, useRouteLoaderData } from "react-r
 import ApplicationsList from "./list";
 import ApplicationNew from "./new";
 import ApplicationDetails from "./details";
-import AuthrApiClient from "@app/sdk";
+import AuthrApiClient from "@sdk";
+import RouterError from "@shared/RouterError";
 
 export const applicationsRoutes : RouteObject = {
   path: "/applications",
   handle: { breadcrumb: 'Applications' },
+  ErrorBoundary: RouterError,
   children: [
     {
       index: true,

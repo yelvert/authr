@@ -1,6 +1,8 @@
-import { createContext, useContext, ComponentType, FunctionComponent, PropsWithChildren } from 'react'
-import useAsync from '@app/shared/utils/useAsync'
-import AuthrApiClient from '@sdk'
+import { createContext, useContext, ComponentType, FunctionComponent, PropsWithChildren, useState, useEffect } from 'react'
+import useAsync from '@shared/utils/useAsync'
+import AuthrApiClient, { CurrentUserUpdateErrors, CurrentUserUpdatePayload } from '@sdk'
+import useRepeatableAsync, { TUseRepeatableAsync } from '@shared/utils/useRepeatableAsync'
+import { isEmpty } from 'lodash'
 
 export interface ICurrentUserInfo {
   id : number
@@ -10,6 +12,7 @@ export interface ICurrentUserInfo {
 
 export interface ICurrentUserContext {
   info : ICurrentUserInfo
+  update : TUseRepeatableAsync<ICurrentUserInfo, [userData : CurrentUserUpdatePayload['current_user']], CurrentUserUpdateErrors | null>
 }
 
 /* @ts-expect-error null */
@@ -23,16 +26,25 @@ export interface ICurrentUserProps {
 }
 
 export const CurrentUser : FunctionComponent<PropsWithChildren<ICurrentUserProps>> = ({ children, loadingRender, errorRender }) => {
+  const [info, setInfo] = useState<ICurrentUserInfo>({} as ICurrentUserInfo)
   const userReq = useAsync(() => AuthrApiClient.currentUser.whoami())
+  useEffect(() => {userReq.value?.data && setInfo(userReq.value?.data)}, [userReq.value])
+  const update : ICurrentUserContext['update'] = useRepeatableAsync((userData) => {
+    if (update.loading) return Promise.reject()
+    return AuthrApiClient.currentUser.currentUserUpdate({current_user: userData})
+      .then(res => { setInfo(res.data); return res.data })
+      .catch(res => Promise.reject(res?.error))
+  }, [])
   
   const Loading = loadingRender || (() => "Loading")
-  if (userReq.loading) return <Loading />
+  if (isEmpty(info)) return <Loading />
 
   const Error = errorRender || (() => "Failed to load current user")
   if (userReq.error) return <Error />
   
   const ctx : ICurrentUserContext = {
-    info: userReq.value!.data
+    info: info!,
+    update,
   }
   
   return <CurrentUserProvider value={ctx}>

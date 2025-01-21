@@ -16,6 +16,9 @@ class SessionsController < ApplicationController
 
   def destroy
     reset_session
-    head(:ok)
+    respond_to do |format|
+      format.html { redirect_to(new_session_url) }
+      format.json  { head(:ok) }
+    end
   end
 end

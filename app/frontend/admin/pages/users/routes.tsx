@@ -1,12 +1,14 @@
-import { RouteObject, UIMatch, useLoaderData, useParams, useRouteLoaderData } from "react-router";
+import { RouteObject, UIMatch, useLoaderData, useRouteLoaderData } from "react-router";
+import AuthrApiClient from "@sdk";
+import RouterError from "@shared/RouterError";
 import { UsersList } from "./list";
 import UserNew from "./new";
 import UserDetails from "./details";
-import AuthrApiClient from "@app/sdk";
 
 export const usersRoutes : RouteObject = {
   path: "/users",
   handle: { breadcrumb: 'Users' },
+  ErrorBoundary: RouterError,
   children: [
     {
       index: true,

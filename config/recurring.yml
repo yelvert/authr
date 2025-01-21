@@ -1,10 +1,5 @@
-default: &default
-  sync_docker:
-    class: SyncDockerJob
-    schedule: every 30 seconds
+development: <%= Authr::RecurringJobs.to_config_yaml.indent(2) %>
 
-development:
-  <<: *default
+test: <%= Authr::RecurringJobs.to_config_yaml.indent(2) %>
 
-production:
-  <<: *default
+production: <%= Authr::RecurringJobs.to_config_yaml.indent(2) %>

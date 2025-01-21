@@ -1,12 +1,14 @@
-import { RouteObject, UIMatch, useLoaderData, useParams, useRouteLoaderData } from "react-router";
+import { RouteObject, UIMatch, useLoaderData, useRouteLoaderData } from "react-router";
+import RouterError from "@shared/RouterError";
+import AuthrApiClient from "@sdk";
 import { GroupsList } from "./list";
 import GroupNew from "./new";
 import GroupDetails from "./details";
-import AuthrApiClient from "@app/sdk";
 
 export const groupsRoutes : RouteObject = {
   path: "/groups",
   handle: { breadcrumb: 'Groups' },
+  ErrorBoundary: RouterError,
   children: [
     {
       index: true,

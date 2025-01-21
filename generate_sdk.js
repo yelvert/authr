@@ -9,6 +9,7 @@ generateApi({
   apiClassName: "AuthrApi",
   input: path.join(process.cwd(), 'swagger', 'swagger.yaml'),
   output: outPath,
+  templates: path.join(process.cwd(), 'sdk_templates'),
   httpClientType: 'fetch',
   generateResponses: true,
   generateRouteTypes: true,

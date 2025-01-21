@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 
-type TUseRepeatableAsync<T, A extends unknown[], E = string> = {
+export type TUseRepeatableAsync<T, A extends unknown[], E = string> = {
   value : T | null
   loading : boolean
   error : E | null

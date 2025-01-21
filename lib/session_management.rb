@@ -67,7 +67,7 @@ module SessionManagement
       def load
         sid = session_key
         raise UnauthorizedError unless redis.exists?(sid)
-        data = JSON.parse(redis.get(sid))
+        JSON.parse(redis.get(sid))
       end
 
       def save

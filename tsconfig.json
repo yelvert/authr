@@ -14,9 +14,14 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "paths": {
-      "@app/*": ["./app/frontend/*"],
+      "@admin/*": ["./app/frontend/admin/*"],
+      "@app/*": ["./app/frontend/app/*"],
+      "@forward_auth/*": ["./app/frontend/forward_auth/*"],
+      "@sessions/*": ["./app/frontend/sessions/*"],
+      "@shared/*": ["./app/frontend/shared/*"],
       "@sdk": ["./app/frontend/sdk/index"],
-      "@admin/*": ["./app/frontend/admin/*"]
+      "@/*": ["./app/frontend/*"],
+      "@*": ["./app/frontend"],
     }
   },
   "exclude": [

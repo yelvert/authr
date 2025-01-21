@@ -171,6 +171,64 @@ paths:
                 - username
         '401':
           description: unauthorized
+    put:
+      summary: update
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                name: CurrentUserUpdateResponse
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  username:
+                    type: string
+                required:
+                - id
+                - name
+                - username
+        '422':
+          description: unprocessible entitiy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    "$ref": "#/components/schemas/attribute_error"
+                  username:
+                    "$ref": "#/components/schemas/attribute_error"
+                  password:
+                    "$ref": "#/components/schemas/attribute_error"
+                  password_confirmation:
+                    "$ref": "#/components/schemas/attribute_error"
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current_user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    username:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+              required:
+              - current_user
   "/admin/groups":
     get:
       summary: list
@@ -576,6 +634,17 @@ components:
         groups_custom_ids:
           "$ref": "#/components/schemas/attribute_error"
         users_custom_ids:
+          "$ref": "#/components/schemas/attribute_error"
+    current_user_update_errors:
+      type: object
+      properties:
+        name:
+          "$ref": "#/components/schemas/attribute_error"
+        username:
+          "$ref": "#/components/schemas/attribute_error"
+        password:
+          "$ref": "#/components/schemas/attribute_error"
+        password_confirmation:
           "$ref": "#/components/schemas/attribute_error"
     group_response:
       name: GroupResponse

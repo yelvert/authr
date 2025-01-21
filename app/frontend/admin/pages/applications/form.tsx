@@ -1,9 +1,8 @@
-import AuthrApiClient from "@app/sdk"
-import { ApplicationErrors, ApplicationDetailResponse, ApplicationsCreatePayload, ApplicationsUpdatePayload } from "@app/sdk/client"
-import useAsync from "@app/shared/utils/useAsync"
 import { FunctionComponent, useCallback, useState } from "react"
 import { Badge, Button, Form } from "react-bootstrap"
 import Select from "react-select"
+import AuthrApiClient, { type ApplicationErrors, ApplicationDetailResponse, ApplicationsCreatePayload, ApplicationsUpdatePayload } from "@sdk"
+import useAsync from "@shared/utils/useAsync"
 
 export interface IApplicationFormProps {
   application : ApplicationDetailResponse
@@ -26,7 +25,7 @@ export const ApplicationForm : FunctionComponent<IApplicationFormProps> = ({ app
   return <Form action={handleSubmit}>
     <Form.Group className="mb-3" controlId="name">
       <Form.Label>Name</Form.Label>
-      <Form.Control type="input" name="name" placeholder="Name" defaultValue={application.name} isInvalid={!!errors?.name} readOnly={application.source != 'custom'} />
+      <Form.Control type="text" name="name" placeholder="Name" defaultValue={application.name} isInvalid={!!errors?.name} readOnly={application.source != 'custom'} />
       <Form.Control.Feedback type="invalid">
         { errors?.name?.join(', ') }
       </Form.Control.Feedback>
@@ -34,7 +33,7 @@ export const ApplicationForm : FunctionComponent<IApplicationFormProps> = ({ app
 
     <Form.Group className="mb-3" controlId="hostnames">
       <Form.Label>Hostnames</Form.Label>
-      <Form.Control type="input" name="hostnames" placeholder="Hostnames" defaultValue={application.hostnames} isInvalid={!!errors?.hostnames} readOnly={application.source != 'custom'} />
+      <Form.Control type="text" name="hostnames" placeholder="Hostnames" defaultValue={application.hostnames} isInvalid={!!errors?.hostnames} readOnly={application.source != 'custom'} />
       <Form.Control.Feedback type="invalid">
         { errors?.hostnames?.join(', ') }
       </Form.Control.Feedback>
@@ -56,7 +55,7 @@ export const ApplicationForm : FunctionComponent<IApplicationFormProps> = ({ app
 
     <Form.Group className="mb-3" controlId="source">
       <Form.Label>Source</Form.Label>
-      <Form.Control type="input" name="source" placeholder="Source" defaultValue={application.source} isInvalid={!!errors?.source} readOnly />
+      <Form.Control type="text" name="source" placeholder="Source" defaultValue={application.source} isInvalid={!!errors?.source} readOnly />
       <Form.Control.Feedback type="invalid">
         { errors?.source?.join(', ') }
       </Form.Control.Feedback>

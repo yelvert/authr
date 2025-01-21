@@ -1,8 +1,8 @@
 import react, { FunctionComponent, useCallback } from 'react'
-import LoginForm from '@app/shared/LoginForm'
+import LoginForm from '@shared/LoginForm'
 import { Card } from 'react-bootstrap'
-import { withLightDarkMode } from '@app/shared/LightDarkModeSwitch'
-import AuthrConfig from '@app/shared/useAuthrConfig'
+import { withLightDarkMode } from '@shared/LightDarkModeSwitch'
+import AuthrConfig from '@shared/useAuthrConfig'
 
 const _App : FunctionComponent = () => {
   const loginHandler = useCallback(() => {

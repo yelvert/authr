@@ -6,7 +6,7 @@ class Admin::ApplicationController < ApplicationController
   def admin_required!
     is_admin? || respond_to do |format|
       format.html { redirect_to(new_session_url) }
-      format.json  { head(:unauthorized) }
+      format.json  { render json: { status: :unauthorized }, status: :unauthorized }
     end
   end
 end
