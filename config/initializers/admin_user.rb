@@ -6,12 +6,11 @@ Rails.configuration.after_initialize do
     admin_user.admin = true
     if Authr::CONFIG[:admin_password]
       admin_user.password_digest = Authr::CONFIG[:admin_password]
-      admin_user.save!
       Rails.logger.info "Administrator user #{admin_user.username} created"
-    else
+    elsif admin_user.new_record?
       admin_user.password = admin_user.password_confirmation = SecureRandom.hex
-      admin_user.save!
-      Rails.logger.info "Administrator user #{admin_user.username} created with password \"#{admin_user.password}\""
+      Rails.logger.info "Administrator user \"#{admin_user.username}\" created with password \"#{admin_user.password}\""
     end
+    admin_user.save!
   end
 end

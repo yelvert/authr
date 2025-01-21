@@ -30,8 +30,9 @@ export const Header : FunctionComponent = () => {
             <LightDarkModeSwitch />
           </Nav.Item>
           <NavDropdown title={currentUser.info.name} id="basic-nav-dropdown">
-            <NavDropdown.Item href="/session/logout">Logout</NavDropdown.Item>
             <NavDropdown.Item as={NavLink} to={accountSettingsRoutes.path!}>Account Settings</NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item href="/session/logout">Logout</NavDropdown.Item>
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>

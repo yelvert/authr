@@ -1,0 +1,12 @@
+master_key: abc123 # can e generated with: openssl rand -base64 $((128*8)) | sed "s/[^a-zA-Z0-9']//g" | tr -s 'a-zA-Z' | tr -d '\n' | cut -c -128
+site_name: Authr
+domain: authr.example.com
+cookie_domain: example.com
+ssl: false
+cookie_name: _authr_session
+cookie_same_site: Lax
+session_expiration: 1.hour
+admin_username: admin
+sync_docker_enabled: false
+sync_docker_interval: every 30 seconds
+docker_url: /var/run/docker.sock

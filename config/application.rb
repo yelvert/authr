@@ -22,7 +22,7 @@ module Authr
   CONFIG_PATH = ENV.fetch("AUTHR_CONFIG_PATH") { File.join(__dir__, "authr.yml") }
   CONFIG = ActiveSupport::OrderedOptions.new.update(
     ActiveSupport::ConfigurationFile.parse(CONFIG_PATH).deep_symbolize_keys.reverse_merge({
-      site_name: "Yelvert Home",
+      site_name: "Authr",
       ssl: false,
       cookie_name: "_authr_session",
       cookie_same_site: "Lax",
@@ -32,6 +32,8 @@ module Authr
       sync_docker_interval: "every 30 seconds"
     })
   )
+
+  raise "authr.yml config must contain a master_key" unless CONFIG[:master_key].present?
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -52,6 +54,8 @@ module Authr
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.secret_key_base = Authr::CONFIG[:master_key]
 
     config.action_controller.default_url_options = {
       protocol: "http#{Authr::CONFIG[:ssl] && "s"}",
