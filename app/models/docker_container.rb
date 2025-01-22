@@ -51,13 +51,13 @@ class DockerContainer
         container: container,
         groups: Group.where(
           "id IN (?) OR name IN (?)",
-          container.info["Labels"]["authr.allowed_group_ids"].split(/,\s?/).map(&:to_i),
-          container.info["Labels"]["authr.allowed_groups"].split(/,\s?/),
+          (container.info["Labels"]["authr.allowed_group_ids"] || "").split(/,\s?/).map(&:to_i),
+          (container.info["Labels"]["authr.allowed_groups"] || "").split(/,\s?/),
         ).to_a,
         users: User.where(
           "id IN (?) OR username IN (?)",
-          container.info["Labels"]["authr.allowed_user_ids"].split(/,\s?/).map(&:to_i),
-          container.info["Labels"]["authr.allowed_users"].split(/,\s?/),
+          (container.info["Labels"]["authr.allowed_user_ids"] || "").split(/,\s?/).map(&:to_i),
+          (container.info["Labels"]["authr.allowed_users"] || "").split(/,\s?/),
         ).to_a,
       )
     end
