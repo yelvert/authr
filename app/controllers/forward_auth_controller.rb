@@ -15,8 +15,8 @@ class ForwardAuthController < ApplicationController
           "X-Authr-User-Id" => current_user.id,
           "X-Authr-User-Username" => current_user.username,
           "X-Authr-User-Name" => current_user.name,
-          "X-Authr-Group-Ids" => current_user.groups.to_a.map(&:id).join(","),
-          "X-Authr-Group-Names" => current_user.groups.to_a.map(&:name).join(","),
+          "X-Authr-Group-Ids" => current_user.groups.map(&:id).join(","),
+          "X-Authr-Group-Names" => current_user.groups.map(&:name).join(","),
         )
       else
         reset_session

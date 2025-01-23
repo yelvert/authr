@@ -23,7 +23,7 @@ RUN apt-get update -qq && \
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development:test"
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
@@ -48,7 +48,7 @@ RUN bundle exec bootsnap precompile app/ lib/
 RUN curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install "$(cat .nvmrc)"
 RUN bundle exec vite info
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN cp config/authr.example.yml config/authr.yml && SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile && rm config/authr.yml
+RUN SECRET_KEY_BASE_DUMMY=1 AUTHR_MASTER_KEY=1 ./bin/rails assets:precompile
 
 
 
@@ -72,4 +72,3 @@ ENTRYPOINT ["/authr/bin/docker-entrypoint"]
 
 # Start server via Thruster by default, this can be overwritten at runtime
 EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
