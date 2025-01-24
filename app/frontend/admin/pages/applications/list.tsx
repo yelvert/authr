@@ -1,10 +1,10 @@
 import { FunctionComponent } from "react"
 import { Table } from "react-bootstrap"
 import { NavLink } from "react-router"
-import { ApplicationResponse } from "@sdk"
+import { ApplicationListResponse } from "@sdk"
 
 export interface IApplicationsListProps {
-  applications : ApplicationResponse[]
+  applications : ApplicationListResponse[]
 }
 
 export const ApplicationsList : FunctionComponent<IApplicationsListProps> = ({ applications }) => {
@@ -15,6 +15,7 @@ export const ApplicationsList : FunctionComponent<IApplicationsListProps> = ({ a
         <th>Name</th>
         <th>Hostnames</th>
         <th>Source</th>
+        <th>Active?</th>
         <th><NavLink to="/applications/new" className="btn btn-success">New</NavLink></th>
       </tr>
     </thead>
@@ -24,6 +25,7 @@ export const ApplicationsList : FunctionComponent<IApplicationsListProps> = ({ a
           <td>{application.name}</td>
           <td>{application.hostnames.join(', ')}</td>
           <td>{application.source}</td>
+          <td>{application.active ? "✅" : "❌" }</td>
           <td>
             <NavLink to={`/applications/${application.id}`} className="link-primary">Edit</NavLink>
           </td>

@@ -1,3 +1,5 @@
+require_relative "./config/cli"
+
 module Authr
   module Config
     DEFAULT_CONFIG = {
@@ -18,6 +20,22 @@ module Authr
     CONFIG_PATH = ENV.fetch("AUTHR_CONFIG_PATH") { File.join(Rails.root, "config", "authr.yml") }
     FILE_CONFIG = (File.exist?(CONFIG_PATH) ? ActiveSupport::ConfigurationFile.parse(CONFIG_PATH) : {}).with_indifferent_access
 
+    ENV_CONFIG = {
+      master_key: ENV["AUTHR_MASTER_KEY"],
+      site_name: ENV["AUTHR_SITE_NAME"],
+      host: ENV["AUTHR_HOST"],
+      allowed_domains: ENV["AUTHR_ALLOWED_DOMAINS"],
+      cookie_ssl: ENV["AUTHR_COOKIE_SSL"],
+      cookie_name: ENV["AUTHR_COOKIE_NAME"],
+      cookie_same_site: ENV["AUTHR_COOKIE_SAME_SITE"],
+      session_expiration: ENV["AUTHR_SESSION_EXPIRATION"],
+      admin_username: ENV["AUTHR_ADMIN_USERNAME"],
+      admin_password: ENV["AUTHR_ADMIN_PASSWORD"],
+      docker_url: ENV["AUTHR_DOCKER_URL"],
+      sync_docker_enabled: ENV["AUTHR_SYNC_DOCKER_ENABLED"],
+      sync_docker_interval: ENV["AUTHR_SYNC_DOCKER_INTERVAL"]
+    }.compact.with_indifferent_access
+
     class << self
       def load
         return @_config if @_config
@@ -25,6 +43,7 @@ module Authr
         @_config.merge!(
           DEFAULT_CONFIG,
           FILE_CONFIG,
+          ENV_CONFIG,
           Config::Cli::CONFIG,
         )
         %i[ cookie_ssl sync_docker_enabled ].each { |k| @_config[k] = @_config[k].downcase == "true" if @_config[k].is_a? String }

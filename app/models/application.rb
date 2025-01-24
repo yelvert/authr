@@ -23,5 +23,8 @@ class Application < ApplicationRecord
 
   validates :source, inclusion: { in: %w[ custom docker ], message: 'Must be one of "custom" or "docker"' }
 
-  scope :for_hostname, ->(hostname) { where("? IN (SELECT value FROM json_each(applications.hostnames))", hostname) }
+  scope :for_hostname, ->(hostname) { where "? IN (SELECT value FROM json_each(applications.hostnames))", hostname }
+
+  scope :active, -> { where active: true }
+  scope :inactive, -> { where active: false }
 end

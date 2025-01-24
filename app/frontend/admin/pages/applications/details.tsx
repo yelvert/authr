@@ -1,13 +1,13 @@
 import { FunctionComponent, useCallback } from "react"
 import { Spinner } from "react-bootstrap"
-import AuthrApiClient, { ApplicationResponse, ApplicationsUpdatePayload } from "@sdk"
+import AuthrApiClient, { ApplicationDetailResponse, ApplicationsUpdatePayload } from "@sdk"
 import useRepeatableAsync from "@shared/utils/useRepeatableAsync"
 import useGrowl from "@shared/Growl"
 import ApplicationForm from "./form"
 import { useNavigate } from "react-router"
 
 export interface IApplicationDetailProps {
-  application : ApplicationResponse
+  application : ApplicationDetailResponse
 }
 
 export const ApplicationDetails : FunctionComponent<IApplicationDetailProps> = ({ application }) => {

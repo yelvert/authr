@@ -53,6 +53,6 @@ class Admin::ApplicationsController < Admin::ApplicationController
 
     # Only allow a list of trusted parameters through.
     def application_params
-      params.expect(application: %i[ name ])
+      params.expect(application: %i[ name active ].concat([ hostnames: [], groups_custom_ids: [], users_custom_ids: [] ]))
     end
 end
