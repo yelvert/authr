@@ -12,7 +12,7 @@ module Authr
 
       recurring_job :sync do |plugin|
         {
-          class: "Authr::Plugin::Docker::SyncDockerJob",
+          class: "Authr::Plugin::Docker::SyncJob",
           schedule: config[:sync_interval]
         }
       end

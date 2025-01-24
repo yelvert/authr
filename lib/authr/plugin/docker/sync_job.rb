@@ -1,8 +1,8 @@
 module Authr
   module Plugin
     class Docker
-      class SyncDockerJob < ApplicationJob
-        limits_concurrency to: 1, key: "sync_docker"
+      class SyncJob < ApplicationJob
+        limits_concurrency to: 1, key: "docker_sync"
 
         def perform
           docker_apps = Container.all.map do |container|
