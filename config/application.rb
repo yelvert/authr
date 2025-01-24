@@ -50,8 +50,6 @@ module Authr
       port: default_host.port
     }
 
-    Docker.url = Authr::CONFIG[:docker_url]
-
     # config.action_controller.asset_host = "localhost:3036"
     config.hosts << "#{default_host.host}:#{default_host.port}"
     (Authr::CONFIG[:allowed_domains] || []).each { |x| config.hosts << x }

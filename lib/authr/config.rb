@@ -12,8 +12,6 @@ module Authr
       cookie_same_site: "Lax",
       session_expiration: 1.hour,
       admin_username: "admin",
-      sync_docker_enabled: false,
-      sync_docker_interval: "every 30 seconds",
       plugins: {}
     }.with_indifferent_access
 
@@ -30,10 +28,7 @@ module Authr
       cookie_same_site: ENV["AUTHR_COOKIE_SAME_SITE"],
       session_expiration: ENV["AUTHR_SESSION_EXPIRATION"],
       admin_username: ENV["AUTHR_ADMIN_USERNAME"],
-      admin_password: ENV["AUTHR_ADMIN_PASSWORD"],
-      docker_url: ENV["AUTHR_DOCKER_URL"],
-      sync_docker_enabled: ENV["AUTHR_SYNC_DOCKER_ENABLED"],
-      sync_docker_interval: ENV["AUTHR_SYNC_DOCKER_INTERVAL"]
+      admin_password: ENV["AUTHR_ADMIN_PASSWORD"]
     }.compact.with_indifferent_access
 
     class << self

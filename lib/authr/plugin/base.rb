@@ -14,6 +14,11 @@ module Authr
           klass.singleton_class.send(:private, :__finalize__)
         end
 
+        def default_config(&block)
+          @default_config = yield if block_given?
+          @default_config ||= {}.with_indifferent_access
+        end
+
         def recurring_jobs = @recurring_jobs ||= {}
         def recurring_job(name, &block)
           @recurring_jobs ||= {}
@@ -25,7 +30,7 @@ module Authr
       attr_reader :config, :recurring_jobs
 
       def initialize(config)
-        @config = config
+        @config = self.class.default_config.deep_dup.merge(config)
         @recurring_jobs = self.class.recurring_jobs.map do |name, block|
           job_hash = instance_eval(&block)
           job_hash.present? ? { "#{name}": job_hash } : {}

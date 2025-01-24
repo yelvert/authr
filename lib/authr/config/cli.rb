@@ -48,9 +48,6 @@ module Authr
             opts.on("--cookie-name=VALUE", "Name of the cookie") { |v| CONFIG[:cookie_name] = v }
             opts.on("--cookie-same-site=VALUE", "Cookie SameSite, one of (Strict, Lax, None), should be Lax unless you know what you're doing") { |v| CONFIG[:cookie_same_site] = v }
             opts.on("--session-expiration=VALUE", "Time in seconds for the the cookie expiration") { |v| CONFIG[:session_expiration] = v }
-            opts.on("--docker-url=VALUE", "The url to connect to docker") { |v| CONFIG[:docker_url] = v }
-            opts.on("--sync-docker=VALUE", "Set sync with docker") { |v| CONFIG[:sync_docker_enabled] = v }
-            opts.on("--sync-docker-interval=VALUE", "How often to sync with docker (value is parsed by fugit (https://github.com/floraison/fugit)") { |v| CONFIG[:sync_docker_interval] = v }
           end
           begin
             op.parse!(AUTHR_ARGV)

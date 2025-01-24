@@ -40,10 +40,19 @@ module Authr
         end
 
         class << self
-          def all(filters = {}) = Docker::Container.all(
-            all: true,
-            filters: { label: [ "authr.host" ] }.deep_merge(filters).to_json
-          ).map(&method(:from_container))
+          def with_docker_address(&block)
+            original_docker_url = ::Docker.url
+            ::Docker.url = Authr::Plugin.enabled[:docker].config[:address]
+            yield
+            ::Docker.url = original_docker_url
+          end
+
+          def all(filters = {}) = with_docker_address do
+            ::Docker::Container.all(
+              all: true,
+              filters: { label: [ "authr.host" ] }.deep_merge(filters).to_json
+            ).map(&method(:from_container))
+          end
 
           def find_by_name(name) = all(name: name).first
 

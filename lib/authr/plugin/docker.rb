@@ -3,6 +3,13 @@ module Authr
     class Docker < Base
       plugin_name :docker
 
+      default_config do
+        {
+          address: "unix:///var/run/docker.sock",
+          sync_interval: "every 30 seconds"
+        }
+      end
+
       recurring_job :sync do |plugin|
         {
           class: "Authr::Plugin::Docker::SyncDockerJob",
