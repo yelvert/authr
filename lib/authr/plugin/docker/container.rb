@@ -43,8 +43,9 @@ module Authr
           def with_docker_address(&block)
             original_docker_url = ::Docker.url
             ::Docker.url = Authr::Plugin.enabled[:docker].config[:address]
-            yield
+            ret = yield
             ::Docker.url = original_docker_url
+            ret
           end
 
           def all(filters = {}) = with_docker_address do
