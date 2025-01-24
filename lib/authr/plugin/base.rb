@@ -30,7 +30,7 @@ module Authr
       attr_reader :config, :recurring_jobs
 
       def initialize(config)
-        @config = self.class.default_config.deep_dup.merge(config)
+        @config = self.class.default_config.deep_dup.deep_symbolize_keys.merge(config.deep_symbolize_keys).with_indifferent_access
         @recurring_jobs = self.class.recurring_jobs.map do |name, block|
           job_hash = instance_eval(&block)
           job_hash.present? ? { "#{name}": job_hash } : {}
