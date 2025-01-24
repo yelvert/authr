@@ -10,7 +10,7 @@ module Authr
             container.application.save!
             container.application
           end
-          Application.where(source: "docker", active: true).where("id NOT IN (?)", docker_apps.map(&:id)).each do |app|
+          ::Application.where(source: "docker", active: true).where("id NOT IN (?)", docker_apps.map(&:id)).each do |app|
             app.assign_attributes(active: false)
             app.save!
           end

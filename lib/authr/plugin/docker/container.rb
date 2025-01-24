@@ -24,7 +24,7 @@ module Authr
 
         def application
           return @application if @application.present?
-          @app = Application.find_or_initialize_by(name: self.name, source: "docker")
+          @app = ::Application.find_or_initialize_by(name: self.name, source: "docker")
           @app.assign_attributes(
             hostnames: self.hostnames,
             active: true,
