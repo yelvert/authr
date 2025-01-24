@@ -20,22 +20,22 @@ module Authr
 
     class << self
       def load
-        return @instance if @instance
-        @instance = {}.with_indifferent_access
-        @instance.merge!(
+        return @_config if @_config
+        @_config = {}.with_indifferent_access
+        @_config.merge!(
           DEFAULT_CONFIG,
           FILE_CONFIG,
           Config::Cli::CONFIG,
         )
-        %i[ cookie_ssl sync_docker_enabled ].each { |k| @instance[k] = @instance[k].downcase == "true" if @instance[k].is_a? String }
+        %i[ cookie_ssl sync_docker_enabled ].each { |k| @_config[k] = @_config[k].downcase == "true" if @_config[k].is_a? String }
         master_key_file = ENV.fetch("AUTHR_MASTER_KEY_FILE") { ENV["AUTHR_MASTER_KEY_FILE"] }
-        @instance[:master_key] = File.read(master_key_file).strip if @instance[:master_key].nil? && master_key_file.present? && File.exist?(master_key_file)
-        raise "must have a master_key configured" unless @instance[:master_key].present?
+        @_config[:master_key] = File.read(master_key_file).strip if @_config[:master_key].nil? && master_key_file.present? && File.exist?(master_key_file)
+        raise "must have a master_key configured" unless @_config[:master_key].present?
         admin_password_file = ENV.fetch("AUTHR_ADMIN_PASSWORD_FILE") { ENV["AUTHR_ADMIN_PASSWORD_FILE"] }
-        @instance[:admin_password] = File.read(admin_password_file).strip if @instance[:admin_password].nil? && admin_password_file.present? && File.exist?(admin_password_file)
-        @instance[:allowed_domains] = @instance[:allowed_domains].split(/,\s?/) if @instance[:allowed_domains].is_a?(String)
-        @instance[:plugins] = (@instance[:plugins] || {}).with_indifferent_access
-        @instance
+        @_config[:admin_password] = File.read(admin_password_file).strip if @_config[:admin_password].nil? && admin_password_file.present? && File.exist?(admin_password_file)
+        @_config[:allowed_domains] = @_config[:allowed_domains].split(/,\s?/) if @_config[:allowed_domains].is_a?(String)
+        @_config[:plugins] = (@_config[:plugins] || {}).with_indifferent_access
+        @_config
       end
     end
   end
