@@ -13,12 +13,23 @@ module Authr
           klass.define_singleton_method(:__finalize__) { Authr::Plugin.register(klass) }
           klass.singleton_class.send(:private, :__finalize__)
         end
+
+        def recurring_jobs = @recurring_jobs ||= {}
+        def recurring_job(name, &block)
+          @recurring_jobs ||= {}
+          @recurring_jobs[:"#{name}"] = block
+        end
       end
 
-      attr_reader :configuration
+      delegate :plugin_name, to: :class
+      attr_reader :config, :recurring_jobs
 
-      def initialize(configuration)
-        @configuration = configuration
+      def initialize(config)
+        @config = config
+        @recurring_jobs = self.class.recurring_jobs.map do |name, block|
+          job_hash = instance_eval(&block)
+          job_hash.present? ? { "#{name}": job_hash } : {}
+        end.reduce(&:merge).freeze
       end
     end
   end

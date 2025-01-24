@@ -14,17 +14,7 @@ module Authr
 
       private
         def all
-          {}.merge(sync_docker)
-        end
-
-        def sync_docker
-          return {} unless Authr::CONFIG[:sync_docker_enabled]
-          {
-            sync_docker: {
-              class: "SyncDockerJob",
-              schedule: Authr::CONFIG[:sync_docker_interval]
-            }
-          }
+          {}.merge(Authr::Plugin.recurring_jobs)
         end
     end
   end

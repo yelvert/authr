@@ -1,14 +1,18 @@
 module Authr
   module Plugin
     @registered = []
-    @enabled = {}
+    @enabled = {}.with_indifferent_access
+
+    @recurring_jobs = {}
 
     class << self
-      attr_reader :registered, :enabled
+      attr_reader :registered, :enabled, :recurring_jobs
 
       def load
         return if @_loaded
-        CONFIG[:plugins].keys.each(&method(:enable))
+        CONFIG[:plugins].each do |name, config|
+          enable(name) if config[:enabled]
+        end
         @_loaded = true
       end
 
@@ -31,6 +35,14 @@ module Authr
       end
 
       def config_for(name) = Authr::CONFIG[:plugins][name.to_sym]
+
+      def recurring_jobs
+        enabled.
+          map do |name, plugin|
+            Hash[plugin.recurring_jobs.map { |k, v| [ :"#{name}_#{k}", v ] }]
+          end.
+          reduce({}, &:merge)
+      end
     end
   end
 end
