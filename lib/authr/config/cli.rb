@@ -48,6 +48,10 @@ module Authr
             opts.on("--cookie-name=VALUE", "Name of the cookie") { |v| CONFIG[:cookie_name] = v }
             opts.on("--cookie-same-site=VALUE", "Cookie SameSite, one of (Strict, Lax, None), should be Lax unless you know what you're doing") { |v| CONFIG[:cookie_same_site] = v }
             opts.on("--session-expiration=VALUE", "Time in seconds for the the cookie expiration") { |v| CONFIG[:session_expiration] = v }
+            opts.on("--help", "Show this message") do
+              puts op
+              exit
+            end
           end
           begin
             op.parse!(AUTHR_ARGV)

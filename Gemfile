@@ -15,9 +15,6 @@ gem "bootsnap", require: false
 
 gem "net-smtp", "0.5.1"
 
-# Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
-gem "kamal", require: false
-
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
@@ -39,11 +36,6 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
 end
-
-group :development do
-  gem "web-console"
-end
-
 
 gem "docker-api", "~> 2.4"
 
