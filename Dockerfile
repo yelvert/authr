@@ -46,6 +46,7 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 RUN curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install "$(cat .nvmrc)"
+RUN npm install -g yarn
 RUN bundle exec vite info
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 AUTHR_MASTER_KEY=1 ./bin/rails assets:precompile
