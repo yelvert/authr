@@ -33,6 +33,10 @@ Rails.application.routes.draw do
     resources :applications, only: %i[ index show create update destroy ]
   end
 
+  scope controller: :environment, path: "/environment", as: :environment do
+    get :settings
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
   root to: redirect("/app", status: 302)
 end

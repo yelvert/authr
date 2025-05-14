@@ -3,6 +3,7 @@ import useAsync from '@shared/utils/useAsync'
 import AuthrApiClient, { CurrentUserUpdateErrors, CurrentUserUpdatePayload } from '@sdk'
 import useRepeatableAsync, { TUseRepeatableAsync } from '@shared/utils/useRepeatableAsync'
 import { isEmpty } from 'lodash'
+import { getDataElement } from '@shared/utils/getDataElement'
 
 export interface ICurrentUserInfo {
   id : number
@@ -26,9 +27,7 @@ export interface ICurrentUserProps {
 }
 
 export const CurrentUser : FunctionComponent<PropsWithChildren<ICurrentUserProps>> = ({ children, loadingRender, errorRender }) => {
-  const [info, setInfo] = useState<ICurrentUserInfo>({} as ICurrentUserInfo)
-  const userReq = useAsync(() => AuthrApiClient.currentUser.whoami())
-  useEffect(() => {userReq.value?.data && setInfo(userReq.value?.data)}, [userReq.value])
+  const [info, setInfo] = useState(getDataElement<ICurrentUserInfo>('current-user-data'))
   const update : ICurrentUserContext['update'] = useRepeatableAsync((userData) => {
     if (update.loading) return Promise.reject()
     return AuthrApiClient.currentUser.currentUserUpdate({current_user: userData})
@@ -36,12 +35,9 @@ export const CurrentUser : FunctionComponent<PropsWithChildren<ICurrentUserProps
       .catch(res => Promise.reject(res?.error))
   }, [])
   
-  const Loading = loadingRender || (() => "Loading")
-  if (isEmpty(info)) return <Loading />
-
   const Error = errorRender || (() => "Failed to load current user")
-  if (userReq.error) return <Error />
-  
+  if (isEmpty(info)) return <Error />
+
   const ctx : ICurrentUserContext = {
     info: info!,
     update,

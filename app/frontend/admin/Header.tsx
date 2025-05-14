@@ -6,13 +6,15 @@ import { NavLink } from 'react-router'
 import userRoutes from './pages/users/routes'
 import groupRoutes from './pages/groups/routes'
 import applicationsRoutes from './pages/applications/routes'
-import { accountSettingsRoutes } from '@shared/pages/AccounSettings'
+import { accountSettingsRoutes } from '@shared/pages/AccountSettings'
+import useEnvironmentSettings from '@shared/contexts/environment_settings'
 
 export const Header : FunctionComponent = () => {
+  const { site_name } = useEnvironmentSettings()
   const currentUser = useCurrentUser()
   return <Navbar expand="lg" sticky="top" className="bg-dark-subtle">
     <Container>
-      <Navbar.Brand href="#">Navbar scroll</Navbar.Brand>
+      <Navbar.Brand href="#">{ site_name }</Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
         <Nav

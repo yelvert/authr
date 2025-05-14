@@ -229,6 +229,23 @@ paths:
                       type: string
               required:
               - current_user
+  "/environment/settings":
+    get:
+      summary: environment settings
+      operationId: environment_settings
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                name: EnvironmentSettingsResponse
+                type: object
+                properties:
+                  site_name:
+                    type: string
+                required:
+                - site_name
   "/admin/groups":
     get:
       summary: list

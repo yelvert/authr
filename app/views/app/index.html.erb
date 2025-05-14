@@ -14,6 +14,9 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <%= render_json "environment/settings", "environment-settings-data" %>
+    <%= render_json "current_user/whoami", "current-user-data", locals: {current_user: current_user} %>
+
     <%= vite_client_tag %>
     <%= vite_react_refresh_tag %>
     <%= vite_javascript_tag(current_user.admin ? 'admin.tsx' : 'app.tsx') %>

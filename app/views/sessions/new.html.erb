@@ -8,7 +8,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= authr_client_config %>
+    <%= render_json "environment/settings", "environment-settings-data" %>
 
     <%= yield :head %>
 

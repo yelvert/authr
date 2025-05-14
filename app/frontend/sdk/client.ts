@@ -122,6 +122,10 @@ export type CurrentUserUpdateError = {
   password_confirmation?: AttributeError
 }
 
+export interface EnvironmentSettingsResponse {
+  site_name: string
+}
+
 export type GroupsListResponse = GroupResponse[]
 
 export interface GroupsCreatePayload {
@@ -575,6 +579,23 @@ export namespace CurrentUser {
     export type RequestBody = CurrentUserUpdatePayload
     export type RequestHeaders = {}
     export type ResponseBody = CurrentUserUpdateResponse
+  }
+}
+
+export namespace Environment {
+  /**
+   * No description
+   * @name EnvironmentSettings
+   * @summary environment settings
+   * @request GET:/environment/settings
+   * @response `200` `EnvironmentSettingsResponse` successful
+   */
+  export namespace EnvironmentSettings {
+    export type RequestParams = {}
+    export type RequestQuery = {}
+    export type RequestBody = never
+    export type RequestHeaders = {}
+    export type ResponseBody = EnvironmentSettingsResponse
   }
 }
 
@@ -1189,6 +1210,23 @@ export class AuthrApi<SecurityDataType extends unknown> extends HttpClient<Secur
         method: 'PUT',
         body: data,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+  }
+  environment = {
+    /**
+     * No description
+     *
+     * @name EnvironmentSettings
+     * @summary environment settings
+     * @request GET:/environment/settings
+     * @response `200` `EnvironmentSettingsResponse` successful
+     */
+    environmentSettings: (params: RequestParams = {}) =>
+      this.request<EnvironmentSettingsResponse, any>({
+        path: `/environment/settings`,
+        method: 'GET',
         format: 'json',
         ...params,
       }),
